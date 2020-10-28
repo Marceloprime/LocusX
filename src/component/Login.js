@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Button, Text, TextInput, View,KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { Button, Text, Linking, TextInput, View,KeyboardAvoidingView, StyleSheet,TouchableOpacity } from 'react-native';
 import { AsyncStorage} from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import WebView from 'react-native-webview';
 
 const AuthContext = React.createContext();
 const Stack = createStackNavigator();
@@ -43,6 +43,40 @@ function Home({route, navigation}) {
 }
 
 
+const supportedURL = "https://class-path-web.herokuapp.com/accounts/sign-up/";
+
+
+const OpenURLButton = ({ url, children }) => {
+  const handlePress = React.useCallback(async () => {
+    // Checking if the link is supported for links with custom URL scheme.
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }, [url]);
+
+  return <Button title={children} onPress={handlePress} />;
+};
+
+
+//Criar instituição
+function CreateInstitution({navigation}) {
+    return (
+        <View style={styles.container}>
+          <OpenURLButton url={supportedURL}>Criar Conta</OpenURLButton>
+        </View>
+      );
+  }
+  
+
+
+
+
 
 function LoginScreen({navigation}) {
   const [username, setUsername] = React.useState('');
@@ -53,22 +87,25 @@ function LoginScreen({navigation}) {
   return (
 
     <KeyboardAvoidingView style = {styles.background}>
-      <View >
+      <View style = {styles.container}>
            <View>
              <Text style={styles.title}>Locus X</Text>    
           </View>
           <TextInput style={styles.inscricao} value={username} placeholder='Nº de inscrição' autoCorrect={false} onChangeText={text => { setUsername(text)}}/>
           <TextInput style={styles.senha} value={password} placeholder='Senha' autoCorrect={false} secureTextEntry={true} onChangeText={text => { setPassword(text)}}/>
-          <Button style={styles.button} title="Acessar" onPress={() => {
+          
+          <TouchableOpacity style={styles.button} onPress={() => {
             signIn(username, password)
             navigation.navigate('Home',{
                 profile: {profile},
             })
-          }} />
-          <Button style={styles.button2} title='Não Tenho Conta' onPress={() => {
-              console.log('Não tenho Conta')
-          }} />
+          }} ><Text style={styles.text}>Acessar</Text></TouchableOpacity>
+          
+          <TouchableOpacity style={styles.button2} onPress={() => {
+             navigation.navigate('Conta')
+          }}><Text style={styles.text}>Não Tenho Conta</Text></TouchableOpacity>
       </View>
+
     </KeyboardAvoidingView>
   );
 }
@@ -198,6 +235,7 @@ export default function Login({ navigation }) {
             // User is signed in
             <Stack.Screen name="Home"  component={Home} />
           )}
+          <Stack.Screen name="Conta"  component={CreateInstitution} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
@@ -207,44 +245,53 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   background:{
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
       backgroundColor: '#46DBD2'
   },
+  container:{
+    flex: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   title:{
+      marginTop: 20,
       fontFamily: 'Times',
       fontSize: 64,
       fontWeight: "bold"
   },
   inscricao:{
-      marginTop: 20,
+      marginTop: 40,
       backgroundColor: "#FFFFFF",
       width: 242,
   },
   senha:{
-      marginTop: 30,
+      marginTop: 35,
       backgroundColor: "#FFFFFF",
       width: 242,
       marginBottom: 20,
   },
   button:{
-      marginTop: 40,
+      marginTop: 10,
       marginBottom: 20,
       display: "flex",
       alignItems:"center",
       justifyContent: "center",
-      backgroundColor: "#3279A2",
       height: 48,
-      width: 100,
+      width: 180,
+      backgroundColor: 'green'
   },
   button2:{
-    marginTop: 40,
+    marginTop: 10,
     display: "flex",
     alignItems:"center",
     justifyContent: "center",
-    backgroundColor: "#3279B2",
-    width: 100,
+    backgroundColor: "#3279A2",
+    height: 48,
+    width: 180,
   },
+  text:{
+      color: '#ffffff',
+      fontWeight: 'bold'
+  }
 
 });
 
