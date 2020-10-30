@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Button, Text, TextInput, View,KeyboardAvoidingView, StyleSheet } from 'react-native';
-import Login from './src/component/Login';
+import Routes from './src/routes';
 
 export default function App(){
   return(
-    <Login/>
+    <Routes/>
   );
 }
