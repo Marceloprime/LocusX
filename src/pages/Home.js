@@ -1,41 +1,77 @@
 import * as React from 'react';
-import { 
-    Button, 
-    Text, 
-    Linking, 
-    TextInput, 
-    View,
-    KeyboardAvoidingView, 
-    StyleSheet,
-    TouchableOpacity 
-} from 'react-native';
-import { AsyncStorage} from '@react-native-community/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {data} from '../routes';
+import Institution from '../pages/Institution';
+import Teacher from '../pages/Teacher';
+import Student from '../pages/Student'
 
 
-
-export default function Home({route, navigation}) {
-    const { signOut } = React.useContext(AuthContext);
+export default function Home() {    
     
-    return (
-      <View style={stylePerfil.main}>
-          <View style={stylePerfil.container}>
-              <View style={stylePerfil.container2}>
-                  <Text>Nº Inscrição: </Text>
-                  <Text>Email: </Text>
-              </View>
-              <View style={stylePerfil.container3}>
-                  <Text>{profile.email}</Text>
-                  <Text>{JSON.stringify(profile.addresses)}</Text>
-                  <Text>{JSON.stringify(profile.is_teacher)}</Text>
-                  <Text>{JSON.stringify(profile.is_student)}</Text>
-                  <Text>{JSON.stringify(profile.is_admin)}</Text>
-                  <Text>{JSON.stringify(profile.token)}</Text>
-                  <Text>{JSON.stringify(profile.has_institution)}</Text>
-              </View>
-          </View>
-          <Button title="Sair" onPress={signOut} />
-      </View>
-    );
-  }
+    if(data.is_admin === true){
+        return(
+            <Institution/>
+        )
+    }
+    else if(data.is_teacher === true){
+        return(
+            <Teacher/>
+        )
+    }
+    else if(data.is_student === true){
+        return(
+            <Student/>
+        )
+    }
+}
+  
+ 
+/*
+
+ function Profile(){
+    const { signOut } = React.useContext(AuthContext);
+    getData
+    return(
+        <View style={stylePerfil.main}>
+            <View style={stylePerfil.container}>
+                <View style={stylePerfil.container2}>
+                    <Text>Aluno: </Text>
+                    <Text>{JSON.stringify(data)}</Text>
+                    <Text>{data.email}</Text>
+                    <Text>{data.registration_number}</Text>
+                    <Text>{data.anddresses}</Text>
+              
+
+                </View>
+                <View style={stylePerfil.container3}>
+                <Icon
+                    name='mail'
+                    type='evilicon'
+                    color='#517fa4'
+                    />
+                </View>
+            </View>
+            <Button title="Sair" onPress={signOut} />
+        </View>
+     )
+ }
+
+
+  const stylePerfil = StyleSheet.create({
+    main:{
+        flex: 1,
+    },  
+    container:{
+        display: 'flex',
+        flex: 2,
+        flexDirection: 'row',
+    },
+    container2:{
+        width: 190,
+        height: 600,
+    },
+    container3:{
+        height: 600
+    }
+});
+
+*/

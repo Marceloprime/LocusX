@@ -10,20 +10,19 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import { AsyncStorage} from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Home from './pages/Home'
+//import Home from './pages/Home'
 import Carregamento from './pages/Loading'
 
 
 //Criacao do contexto e da pilha de navegacao
+const AuthContext = React.createContext();
 const Stack = createStackNavigator();
-import {AuthContext} from './functions/context'
 
 let profile
-export let data 
 
 
 export default function Routes({ navigation }) {
@@ -89,13 +88,19 @@ export default function Routes({ navigation }) {
   
         request.setRequestHeader('Content-Type', 'application/json');
   
-        request.onreadystatechange = async function () {
+        request.onreadystatechange = function () {
             if (this.readyState === 4) {
-                //console.log('Status:', this.status);
-                //console.log('Headers:', this.getAllResponseHeaders());
-                //console.log('Body:', this.responseText);
+                console.log('Status:', this.status);
+                console.log('Headers:', this.getAllResponseHeaders());
+                console.log('Body:', this.responseText);
                 profile = JSON.parse(this.responseText) 
-                data = JSON.parse(this.responseText) 
+  
+                try {
+                    userToken = AsyncStorage.setItem('userToken',profile.token);
+                } catch (e) {
+                    console.log('Falha')
+                }
+            
                 dispatch({ type: 'SIGN_IN', token: profile.token });
   
             }
@@ -157,7 +162,7 @@ export default function Routes({ navigation }) {
   
 
 //Tela inicial pos login
-/*
+
 function Home({route, navigation}) {
   const { signOut } = React.useContext(AuthContext);
    
@@ -177,7 +182,6 @@ function Home({route, navigation}) {
     </View>
   );
 }
-*/
 
 const supportedURL = "https://class-path-web.herokuapp.com/accounts/sign-up/";
 
@@ -219,9 +223,11 @@ function LoginScreen({navigation}) {
           <TextInput style={styles.senha} value={password} placeholder='Senha' autoCorrect={false} secureTextEntry={true} onChangeText={text => { setPassword(text)}}/>
           
           <TouchableOpacity style={styles.button} onPress={ async () => {
-            await signIn(username, password)
+            signIn(username, password)
             setLoading('Carregando')
-            navigation.navigate('Home')
+            navigation.navigate('Home',{
+                profile: {profile},
+            })
           }} ><Text style={styles.text}>{Loading}</Text></TouchableOpacity>
           
           <OpenURLButton url={supportedURL}>Não Temho Conta</OpenURLButton>
@@ -283,4 +289,24 @@ const styles = StyleSheet.create({
 
   }
 
+});
+
+const stylePerfil = StyleSheet.create({
+    main:{
+        flex: 1,
+        backgroundColor: '#46DBD2'
+    },  
+    container:{
+        display: 'flex',
+        flex: 2,
+        flexDirection: 'row',
+    },
+    container2:{
+        width: 180,
+        height: 600,
+    },
+    container3:{
+        width: 180,
+        height: 600
+    }
 });
