@@ -12,7 +12,7 @@ import {
     Button
 } from 'react-native';
 import  AsyncStorage from '@react-native-community/async-storage';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import {AuthContext} from '../functions/context';
 import {data} from '../routes';
 import { Card, Icon } from 'react-native-elements'
@@ -27,8 +27,16 @@ const Drawer = createDrawerNavigator();
  */
 
 export default function Student() {    
+    const { signOut } = React.useContext(AuthContext);
     return (
-        <Drawer.Navigator initialRouteName="Perfil">
+        <Drawer.Navigator initialRouteName="Perfil" drawerContent = {props =>{
+            return(
+                <DrawerContentScrollView {...props}>
+                    <DrawerItemList {...props}></DrawerItemList>
+                    <DrawerItem label='Sair'inactiveBackgroundColor='#00FFFF' onPress={signOut}></DrawerItem>
+                </DrawerContentScrollView>
+            )
+        }}>
             <Drawer.Screen name="Perfil" component={Generic} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Disciplinas" component={Generic} />
