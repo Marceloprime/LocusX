@@ -32,6 +32,7 @@ const Drawer = createDrawerNavigator();
 
 export default function Institution() {    
     const { signOut } = React.useContext(AuthContext);
+
     return (
         <Drawer.Navigator initialRouteName="Perfil" drawerContent = {props =>{
             return(

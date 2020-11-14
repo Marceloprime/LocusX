@@ -2,10 +2,12 @@ import * as React from 'react';
 import {View, Text, Button} from 'react-native';
 import { Value } from 'react-native-reanimated';
 import {data} from '../routes';
+import  AsyncStorage from '@react-native-community/async-storage';
+
 
 
 export default function List_courses() {
-    const [list,useList] = React.useState('')
+    const [list,useList] = React.useState()
 
     const search = async() =>{
         let request = new XMLHttpRequest();
@@ -22,12 +24,12 @@ export default function List_courses() {
             console.log('Status:', this.status);
             console.log('Headers:', this.getAllResponseHeaders());
             let body = await JSON.parse(this.responseText,(key, value) =>{
-              console.log(key)
+              console.log('key: ' + key)
               console.log(value)
               console.log('///////////////////')
               return value
             });
-            useList(body[0].name)
+            useList(body[0])
           }
         };
         
@@ -37,7 +39,7 @@ export default function List_courses() {
     return (
       <View>       
         <Text>List_courses</Text>
-        <Text>{list}</Text>
+        <Text>{JSON.stringify(list)}</Text>
         <Button  title="Buscar" onPress={search}></Button>
       </View>
     );

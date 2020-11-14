@@ -9,12 +9,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import Icon from 'react-native-vector-icons/Entypo';
 
 import Home from './pages/Home'
 import Carregamento from './pages/Loading'
@@ -23,8 +23,10 @@ import Carregamento from './pages/Loading'
 const Stack = createStackNavigator();
 import {AuthContext} from './functions/context'
 
+//Variaves de dados
 let profile;
-export let data ;
+export let data;
+
 
 
 export default function Routes() {
@@ -63,16 +65,42 @@ export default function Routes() {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
     let userToken;
+    let username;
+    let password;
     try {
       userToken = await AsyncStorage.getItem('userToken');
-      console.log('Passou'+ userToken)
+      username = await AsyncStorage.getItem('@username');
+      password = await AsyncStorage.getItem('@password');
+
+      console.log('Token: '+ userToken)
+      console.log('username: '+ username)
+      console.log('password: '+ password)
+      let request = new XMLHttpRequest();
+     
+      await request.open('POST', 'http://class-path-auth.herokuapp.com/login/');
+      await request.setRequestHeader('Content-Type', 'application/json');
+      request.onreadystatechange = async function () {
+        if (this.readyState === 4) {
+          data = JSON.parse(this.responseText) 
+          profile = await JSON.parse(this.responseText)
+          dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+        }
+        else{
+          console.log('Status:', this.status);
+          console.log('Falha')
+        }
+      };
+      let body = {
+        'username': username,
+        'password': password,
+      };
+      request.send(JSON.stringify(body));
     } catch (e) {
       console.log('Falha no Token')
     }
     // After restoring token, we may need to validate it in production apps
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    dispatch({ type: 'RESTORE_TOKEN', token: userToken });
   };
   
   bootstrapAsync();
@@ -90,13 +118,45 @@ export default function Routes() {
           //console.log('Headers:', this.getAllResponseHeaders());
           //console.log('Body:' + this.responseText); 
 
-          data = JSON.parse(this.responseText) 
-          profile = await JSON.parse(this.responseText)
-          dispatch({ type: 'SIGN_IN', token: profile.token });
-        }
-        else{
-          console.log('Status:', this.status);
-          console.log('Falha')
+          if(this.responseText === '{"non_field_errors":["Unable to log in with provided credentials."]}'){
+            console.log('senha errada');
+            Alert.alert(
+              "Atenção",
+              "Número de inscrição ou senha incorretos.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                }
+              ],
+              { cancelable: false }
+            );
+          }
+
+          else if(this.responseText === '{"username":["This field may not be blank."],"password":["This field may not be blank."]}'){
+            console.log('senha em branco')
+            Alert.alert(
+              "Atenção",
+              "Os campos Número de inscrição e senha incorretos estão vazios.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                }
+              ],
+              { cancelable: false }
+            );
+          }
+          else{
+            data = JSON.parse(this.responseText) 
+            profile = await JSON.parse(this.responseText)
+            await AsyncStorage.setItem('userToken',profile.token)
+            await AsyncStorage.setItem('@username',username);
+            await AsyncStorage.setItem('@password',password);
+            dispatch({ type: 'SIGN_IN', token: profile.token });
+          }
         }
       };
       let body = {
@@ -107,7 +167,10 @@ export default function Routes() {
   
     },
     
-    signOut: () => dispatch({ type: 'SIGN_OUT' }),
+    signOut: async () => {
+      await AsyncStorage.clear();
+      dispatch({ type: 'SIGN_OUT' })
+    },
     
     signUp: async data => {
         // In a production app, we need to send user data to server and get a token
@@ -123,8 +186,8 @@ export default function Routes() {
   
     return (
       <AuthContext.Provider value={authContext}>
-        <NavigationContainer>
-          <Stack.Navigator>
+        <NavigationContainer >
+          <Stack.Navigator screenOptions={{headerShown: false}}>
             {state.isLoading ? (
               // We haven't finished checking for the token yet
               <Stack.Screen name="Splash" component={Carregamento} />
@@ -173,7 +236,12 @@ const OpenURLButton = ({ url, children }) => {
 function LoginScreen({navigation}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [Loading, setLoading] = React.useState('Acessar');
+  const [showPas, setShow] = React.useState(true)
+
+  const eye = <Icon name="eye" size={20} color="grey" />;
+  const eyeWithLine = <Icon name="eye-with-line" size={20} color="grey" />;
+  const [eyes, setEyes] = React.useState(eye)
+
 
   const { signIn } = React.useContext(AuthContext);
 
@@ -186,14 +254,27 @@ function LoginScreen({navigation}) {
              <Image style={styles.logo} source={require('./assets/cnpq.png')}></Image>  
           </View>
           <TextInput style={styles.inscricao} value={username} placeholder='Nº de inscrição' autoCorrect={true} onChangeText={text => { setUsername(text)}}/>
-          <TextInput style={styles.senha} value={password} placeholder='Senha' autoCorrect={false} secureTextEntry={true} onChangeText={text => { setPassword(text)}}/>
-          
+          <View style={styles.senha}>
+          <TextInput  value={password} placeholder='Senha' autoCorrect={false} secureTextEntry={showPas} onChangeText={text => { setPassword(text)}}/>
+          <TouchableOpacity style={styles.iconEye} onPress={ async () => {
+                if(showPas === true){
+                  setShow(false)
+                  setEyes(eye)
+                }
+                else{
+                  setShow(true)
+                  setEyes(eyeWithLine)
+                }            
+
+              }} >{eyes}</TouchableOpacity>
+          </View>
+
           <TouchableOpacity style={styles.button} onPress={ async () => {
             await signIn(username, password)
             //setLoading('Carregando')
-            await console.log('Data: '+ JSON.stringify(data))
+            //await console.log('Data: '+ JSON.stringify(data))
             navigation.navigate('Home')
-          }} ><Text style={styles.text}>{Loading}</Text></TouchableOpacity>
+          }} ><Text style={styles.text}>Acessar</Text></TouchableOpacity>
           
           <OpenURLButton url={supportedURL}>Não Temho Conta</OpenURLButton>
       </View>
@@ -230,6 +311,14 @@ const styles = StyleSheet.create({
       backgroundColor: "#FFFFFF",
       width: 242,
       marginBottom: 20,
+  },
+  iconEye:{
+    position: 'absolute',
+    top: 15,
+    left: 215,
+    width: 30,
+    height: 42,
+    bottom: 20,
   },
   button:{
       marginTop: 15,
