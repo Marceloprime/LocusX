@@ -16,7 +16,8 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemL
 import {AuthContext} from '../functions/context';
 import {data} from '../routes';
 import { Card, Icon } from 'react-native-elements'
-import Generic from '../component/generic'
+import Generic from '../component/generic';
+import Atividades from './atividades'
 
 const Drawer = createDrawerNavigator();
 
@@ -38,9 +39,32 @@ export default function Student() {
             )
         }}>
             <Drawer.Screen name="Perfil" component={Generic} />
+            <Drawer.Screen name="Minhas atividades" component={Atividades} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Disciplinas" component={Generic} />
         </Drawer.Navigator>
     );
 }
   
+
+function Profile(){
+    return(
+        <View style={stylePerfil.main}>
+            <View style={stylePerfil.container}>
+                <View style={stylePerfil.container2}>
+                    <Text>Instituição: </Text>
+                    <Text>{'Nº inscrição: ' + data.registration_number}</Text>
+                    <Text>{data.addresses[0].state}</Text>
+                    <Text>{data.addresses[0].city}</Text>
+                    <Text>{data.addresses[0].street}</Text>
+                    <Text>{data.addresses[0].neighborhood}</Text>
+                    <Text>{data.addresses[0].number}</Text>
+                    <Text>{data.addresses[0].postal_code}</Text>
+
+                </View>
+                <View style={stylePerfil.container3}>
+                </View>
+            </View>
+        </View>
+     )
+ }
