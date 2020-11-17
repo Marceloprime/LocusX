@@ -1,15 +1,25 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView from 'react-native-maps';
+import React, { useState } from 'react';
+import { StyleSheet, View, Dimensions} from 'react-native';
+import MapView , {Marker} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
+const { width, height } = Dimensions.get("window");
 
 export default function Atividades(){
+    const [longitude, useLong] = useState(0);
+    const [latitude, useLati] = useState(0);
+
+    Geolocation.getCurrentPosition(info => {
+        useLati(info.coords.latitude)
+        useLong(info.coords.longitude)
+    });
+
     return(
         <View style={styles.main}>
             <MapView style={styles.map}
                 initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: latitude,
+                longitude: longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
                 }}
@@ -28,7 +38,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        width:350,
+        width: width,
         height: 300,
       },
 })
