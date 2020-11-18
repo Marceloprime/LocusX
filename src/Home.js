@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {data} from '../routes';
-import Institution from './Institution';
-import Teacher from './Teacher';
-import Student from './Student'
-import  AsyncStorage from '@react-native-community/async-storage';
-
+import {data} from './routes';
+import Institution from './Pages/Institution.js';
+import Teacher from './Pages/Teacher';
+import Student from './Pages/Student'
 
 export default function HomeScreen() {    
 

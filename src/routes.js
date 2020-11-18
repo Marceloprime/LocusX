@@ -16,12 +16,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Entypo';
 
-import Home from './pages/Home'
-import Carregamento from './pages/Loading'
+import Home from './Home'
+import Carregamento from './component/Loading'
 
 
 const Stack = createStackNavigator();
-import {AuthContext} from './functions/context'
+import {AuthContext} from './Global/context'
 
 //Variaves de dados
 let profile;

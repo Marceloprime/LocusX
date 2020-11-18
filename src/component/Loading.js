@@ -8,7 +8,7 @@ export default function Carregamento() {
         <View style = {styles.container}>
           <View>
              <Text style={styles.title}>Locus X</Text>  
-             <Image style={styles.logo} source={require('../../../locus/src/assets/cnpq.png')}></Image>  
+             <Image style={styles.logo} source={require('../../src/assets/cnpq.png')}></Image>  
           </View>
         </View>
       </KeyboardAvoidingView>

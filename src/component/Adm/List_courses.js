@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, StyleSheet, FlatList} from 'react-native';
 import { Value } from 'react-native-reanimated';
-import {data} from '../routes';
+import {data} from '../../../src/routes';
 import  AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -29,7 +29,7 @@ export default function List_courses() {
               console.log('///////////////////')
               return value
             });
-            useList(body[0])
+            useList(body)
           }
         };
         
@@ -38,9 +38,36 @@ export default function List_courses() {
 
     return (
       <View>       
-        <Text>List_courses</Text>
-        <Text>{JSON.stringify(list)}</Text>
+        <Text style={styles.head}>Lista de Cursos ou séries</Text>
+        <FlatList
+        data={list}
+        renderItem={({item}) => <Text style={styles.item}>{item.name}</Text>}
+      />
         <Button  title="Buscar" onPress={search}></Button>
       </View>
     );
 }
+
+const styles = StyleSheet.create({
+  head:{
+    top:0,
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'blue',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  item:{
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(247,247,247,1.0)',
+  }
+})
