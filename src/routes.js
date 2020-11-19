@@ -81,6 +81,7 @@ export default function Routes() {
       await request.setRequestHeader('Content-Type', 'application/json');
       request.onreadystatechange = async function () {
         if (this.readyState === 4) {
+          console.log(this.responseText)
           data = JSON.parse(this.responseText) 
           profile = await JSON.parse(this.responseText)
           dispatch({ type: 'RESTORE_TOKEN', token: userToken });
