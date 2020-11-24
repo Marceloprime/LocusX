@@ -18,12 +18,21 @@ export default function Atividades(){
         <View style={styles.main}>
             <MapView style={styles.map}
                 initialRegion={{
-                latitude: latitude,
-                longitude: longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-                }}
-            />
+                    latitude: latitude,
+                    longitude: longitude,
+                    latitudeDelta: 0.000922,
+                    longitudeDelta: 0.000421,
+                }} showsUserLocation={true} 
+            >
+            <Marker key={0} coordinate={{
+                    latitude: latitude,
+                    longitude: longitude,
+                    latitudeDelta: 0.000922,
+                    longitudeDelta: 0.000421,
+            }} >
+
+            </Marker>
+            </MapView>
         </View>
     )
 }

@@ -41,6 +41,9 @@ export default function Teacher() {
             <Drawer.Screen name="Perfil" component={Generic} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Disciplinas" component={Generic} />
+            <Drawer.Screen name="Lista de turmas" component={Generic} />
+            <Drawer.Screen name="Criar Tarefa" component={Generic} />
+            <Drawer.Screen name="Minhas Tarefas Tarefa" component={Generic} />
         </Drawer.Navigator>
     );
 }
