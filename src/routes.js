@@ -25,7 +25,7 @@ import {AuthContext} from './Global/context'
 
 //Variaves de dados
 let profile;
-export let data;
+export let data = null;
 
 
 
@@ -71,10 +71,13 @@ export default function Routes() {
       userToken = await AsyncStorage.getItem('userToken');
       username = await AsyncStorage.getItem('@username');
       password = await AsyncStorage.getItem('@password');
+      ProfileData = await AsyncStorage.getItem('@data');
 
       console.log('Token: '+ userToken)
       console.log('username: '+ username)
       console.log('password: '+ password)
+      console.log('Data: '+ ProfileData)
+
       let request = new XMLHttpRequest();
      
       await request.open('POST', 'http://class-path-auth.herokuapp.com/login/');
@@ -156,6 +159,7 @@ export default function Routes() {
             await AsyncStorage.setItem('userToken',profile.token)
             await AsyncStorage.setItem('@username',username);
             await AsyncStorage.setItem('@password',password);
+            await AsyncStorage.setItem('@data',this.responseText);
             dispatch({ type: 'SIGN_IN', token: profile.token });
           }
         }

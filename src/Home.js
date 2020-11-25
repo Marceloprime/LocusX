@@ -5,7 +5,6 @@ import Teacher from './Pages/Teacher';
 import Student from './Pages/Student'
 
 export default function HomeScreen() {    
-
     if(data.is_admin === true){
         return(
             <Institution/>

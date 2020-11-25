@@ -22,7 +22,7 @@ export default function Atividades(){
                     longitude: longitude,
                     latitudeDelta: 0.000922,
                     longitudeDelta: 0.000421,
-                }} showsUserLocation={true} 
+                }} showsUserLocation={true} showsMyLocationButton={true}
             >
             <Marker key={0} coordinate={{
                     latitude: latitude,
@@ -30,8 +30,13 @@ export default function Atividades(){
                     latitudeDelta: 0.000922,
                     longitudeDelta: 0.000421,
             }} >
-
             </Marker>
+            <Marker key={1} coordinate={{
+                    latitude: latitude+2,
+                    longitude: longitude+2,
+                    latitudeDelta: 0.000922,
+                    longitudeDelta: 0.000421,
+            }} ></Marker>
             </MapView>
         </View>
     )
