@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {View, Text, KeyboardAvoidingView,Image, StyleSheet } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 //Tela de carregamento
 export default function Carregamento() {
@@ -9,6 +10,9 @@ export default function Carregamento() {
           <View>
              <Text style={styles.title}>Locus X</Text>  
              <Image style={styles.logo} source={require('../../src/assets/cnpq.png')}></Image>  
+              <Spinner
+                visible={true}
+              />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -43,6 +47,19 @@ export default function Carregamento() {
         alignSelf: 'center',
         borderRadius: 20,
   
+    },
+    spinnerTextStyle: {
+      color: '#FFF'
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 10
+    },
+    instructions: {
+      textAlign: 'center',
+      color: '#333333',
+      marginBottom: 5
     }
   
   });

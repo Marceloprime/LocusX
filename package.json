@@ -23,6 +23,7 @@
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-maps": "0.27.1",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
@@ -30,7 +31,9 @@
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.10.0",
     "react-navigation": "^4.4.3",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "url": "^0.11.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
