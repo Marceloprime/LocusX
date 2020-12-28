@@ -12,6 +12,8 @@ target 'locus' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
+
   target 'locusTests' do
     inherit! :complete
     # Pods for testing

@@ -1,13 +1,16 @@
 import * as React from 'react';
-import {View, Text, Button, StyleSheet, FlatList} from 'react-native';
-import { Value } from 'react-native-reanimated';
-import {data} from '../../routes';
-import  AsyncStorage from '@react-native-community/async-storage';
+import {View, Text, Button, StyleSheet, FlatList, ScrollView} from 'react-native';
+import {data} from '../../../src/routes';
+import { TextInput } from 'react-native-gesture-handler';
 
 
 
-export default function Listar_Disciplinas() {
+export default function List_courses() {
     const [list,useList] = React.useState()
+    const [dlist,useDlist] = React.useState()
+    const [id,useId] = React.useState()
+   
+
     const search = async() =>{
         let request = new XMLHttpRequest();
     
@@ -19,9 +22,9 @@ export default function Listar_Disciplinas() {
     
         request.onreadystatechange = async function () {
           if (this.readyState === 4) {
-            //console.log('/////////////////////////////////////////////');
-            //console.log('Status:', this.status);
-            //console.log('Headers:', this.getAllResponseHeaders());
+            console.log('/////////////////////////////////////////////');
+            console.log('Status:', this.status);
+            console.log('Headers:', this.getAllResponseHeaders());
             let body = await JSON.parse(this.responseText,(key, value) =>{
               console.log('key: ' + key)
               console.log(value)
@@ -35,13 +38,49 @@ export default function Listar_Disciplinas() {
         request.send();
     }
 
+    const detailsearch = async() =>{
+      let request = new XMLHttpRequest();
+  
+      request.open('GET',  'http://class-path-auth.herokuapp.com/courses/'+id+'/');
+      
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.setRequestHeader('Authorization', 'Token '+ data.token);
+  
+  
+      request.onreadystatechange = async function () {
+        if (this.readyState === 4) {
+          console.log('/////////////////////////////////////////////');
+          console.log('Status:', this.status);
+          console.log('Headers:', this.getAllResponseHeaders());
+          let body = await JSON.parse(this.responseText,(key, value) =>{
+            console.log('key: ' + key)
+            console.log(value)
+            console.log('///////////////////')
+            return value
+          });
+          useDlist(body)
+        }
+      };
+      
+      request.send();
+    }
     return (
-      <View>       
-        <Text style={styles.head}>Listar Disciplinas</Text>
-        <Text>{JSON.stringify(list)}</Text>
-        <Button  title='Busca' onPress={
-          search}></Button>
-      </View>
+      <ScrollView scrollEnabled={true} >
+        <View>       
+          <Text style={styles.head}>Lista Disciplinas</Text>
+          <TextInput value={id} autoCorrect={false} placeholder='Digite o id do curso ou série:' onChangeText={text => { useId(text),detailsearch}}/>
+          <Button  title="Buscar" onPress={detailsearch}></Button>
+          <FlatList
+          data={list}
+          renderItem={({item}) => <Text style={styles.item}>{item.name} id: {JSON.stringify(item.id)}</Text>}
+        />
+          <Button  title="Listar" onPress={search}></Button>
+        </View>
+        <View>
+          <Text style={styles.head}>Detalhes</Text>
+          <Text>{JSON.stringify(dlist)}</Text>
+        </View>
+      </ScrollView>
     );
 }
 
@@ -65,7 +104,6 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     fontSize: 14,
     borderBottomColor: "blue",
-    textAlign:'center',
     borderBottomWidth: StyleSheet.hairlineWidth
   }
 })

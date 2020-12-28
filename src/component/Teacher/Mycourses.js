@@ -1,13 +1,11 @@
 import * as React from 'react';
-import {View, Text, Button, StyleSheet, FlatList} from 'react-native';
-import { Value } from 'react-native-reanimated';
-import {data} from '../../../src/routes';
-import  AsyncStorage from '@react-native-community/async-storage';
+import {View, Text, Button, StyleSheet, FlatList, ScrollView} from 'react-native';
+import {data} from '../../routes';
 import { TextInput } from 'react-native-gesture-handler';
 
 
 
-export default function List_courses() {
+export default function Mycourses() {
     const [list,useList] = React.useState()
     const [dlist,useDlist] = React.useState()
     const [id,useId] = React.useState()
@@ -16,7 +14,7 @@ export default function List_courses() {
     const search = async() =>{
         let request = new XMLHttpRequest();
     
-        request.open('GET', 'http://class-path-auth.herokuapp.com/programs/');
+        request.open('GET', 'http://class-path-auth.herokuapp.com/my-programs/');
         
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('Authorization', 'Token '+ data.token);
@@ -43,7 +41,7 @@ export default function List_courses() {
     const detailsearch = async() =>{
       let request = new XMLHttpRequest();
   
-      request.open('GET',  'http://class-path-auth.herokuapp.com/programs/'+id+'/');
+      request.open('GET',  'http://class-path-auth.herokuapp.com/my-programs/'+id+'/');
       
       request.setRequestHeader('Content-Type', 'application/json');
       request.setRequestHeader('Authorization', 'Token '+ data.token);
@@ -67,9 +65,9 @@ export default function List_courses() {
       request.send();
     }
     return (
-      <View>
+      <ScrollView scrollEnabled={true} >
         <View>       
-          <Text style={styles.head}>Lista de Cursos ou séries</Text>
+          <Text style={styles.head}>Minhas Séries/Cursos</Text>
           <TextInput value={id} autoCorrect={false} placeholder='Digite o id do curso ou série:' onChangeText={text => { useId(text),detailsearch}}/>
           <Button  title="Buscar" onPress={detailsearch}></Button>
           <FlatList
@@ -82,7 +80,7 @@ export default function List_courses() {
           <Text style={styles.head}>Detalhes</Text>
           <Text>{JSON.stringify(dlist)}</Text>
         </View>
-      </View>
+      </ScrollView>
     );
 }
 

@@ -32,7 +32,7 @@ const Drawer = createDrawerNavigator();
 export default function Student() {    
     const { signOut } = React.useContext(AuthContext);
     return (
-        <Drawer.Navigator initialRouteName="Perfil" drawerContent = {props =>{
+        <Drawer.Navigator initialRouteName="Atividade Atual" drawerContent = {props =>{
             return(
                 <DrawerContentScrollView {...props}>
                     <DrawerItemList {...props}></DrawerItemList>
@@ -40,8 +40,8 @@ export default function Student() {
                 </DrawerContentScrollView>
             )
         }}>
-            <Drawer.Screen name="Perfil" component={Profile} />
             <Drawer.Screen name="Atividade Atual" component={Atividades} />
+            <Drawer.Screen name="Perfil" component={Profile} />
             <Drawer.Screen name="Minhas atividades" component={Generic} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Minhas Disciplinas" component={Generic} />
