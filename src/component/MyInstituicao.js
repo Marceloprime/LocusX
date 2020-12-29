@@ -8,7 +8,7 @@ export default function MyInstituicao(){
     const search = async() =>{
         let request = new XMLHttpRequest();
     
-        request.open('GET', 'http://class-path-auth.herokuapp.com/users/');
+        request.open('GET', 'http://class-path-auth.herokuapp.com/my-institution/');
         
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('Authorization', 'Token '+ data.token);

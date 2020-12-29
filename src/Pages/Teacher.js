@@ -5,7 +5,9 @@ import Generic from '../component/generic';
 import Profile from '../component/Teacher/Profile';
 import Myclasses from '../component/Teacher/Myclasses';
 import Mycourses from '../component/Teacher/Mycourses';
-
+import MyInstituicao from '../component/MyInstituicao';
+import AuthenticatedCourses from '../component/Teacher/AuthenticatedCourses';
+import CreateLocation from '../component/Teacher/CreateLocation';
 const Drawer = createDrawerNavigator();
 
 export default function Teacher() {  
@@ -25,7 +27,9 @@ export default function Teacher() {
             <Drawer.Screen name="Disciplinas" component={Generic} />
             <Drawer.Screen name="Minhas turmas" component={Myclasses} />
             <Drawer.Screen name="Minhas Séries/Cursos" component={Mycourses} />
-            <Drawer.Screen name="Minhas Tarefas Tarefa" component={Generic} />
+            <Drawer.Screen name="Minha Instituição" component={MyInstituicao} />
+            <Drawer.Screen name="Autenticados" component={AuthenticatedCourses} />
+            <Drawer.Screen name="Criar Localização" component={CreateLocation} />
         </Drawer.Navigator>
     );
 }
