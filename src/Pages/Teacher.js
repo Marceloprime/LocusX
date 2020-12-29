@@ -8,6 +8,8 @@ import Mycourses from '../component/Teacher/Mycourses';
 import MyInstituicao from '../component/MyInstituicao';
 import AuthenticatedCourses from '../component/Teacher/AuthenticatedCourses';
 import CreateLocation from '../component/Teacher/CreateLocation';
+import CreateContent from '../component/Teacher/CreateContent';
+
 const Drawer = createDrawerNavigator();
 
 export default function Teacher() {  
@@ -29,7 +31,9 @@ export default function Teacher() {
             <Drawer.Screen name="Minhas Séries/Cursos" component={Mycourses} />
             <Drawer.Screen name="Minha Instituição" component={MyInstituicao} />
             <Drawer.Screen name="Autenticados" component={AuthenticatedCourses} />
-            <Drawer.Screen name="Criar Localização" component={CreateLocation} />
+            <Drawer.Screen name="Localização" component={CreateLocation} />
+            <Drawer.Screen name="Conteudos" component={CreateContent} />
+            <Drawer.Screen name="Atividades" component={Generic} />
         </Drawer.Navigator>
     );
 }
