@@ -24,8 +24,8 @@ const Stack = createStackNavigator();
 import {AuthContext} from './Global/context'
 
 //Variaves de dados
-let profile;
-export let data = null;
+let profile = null;
+export let data;
 
 
 
@@ -109,8 +109,11 @@ export default function Routes() {
   
   bootstrapAsync();
   }, []);
+
   
-  const authContext = React.useMemo(() => ({
+
+  
+const authContext = React.useMemo(() => ({
     signIn: async (username, password) => {
       let request = new XMLHttpRequest();
      
@@ -217,7 +220,7 @@ export default function Routes() {
     );
   }
   
-const supportedURL = "https://class-path-web.herokuapp.com/accounts/sign-up/";
+const supportedURL = "https://class-path-web.herokuapp.com/";
 
 
 const OpenURLButton = ({ url, children }) => {

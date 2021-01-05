@@ -9,6 +9,8 @@ import MyInstituicao from '../component/MyInstituicao';
 import AuthenticatedCourses from '../component/Teacher/AuthenticatedCourses';
 import CreateLocation from '../component/Teacher/CreateLocation';
 import CreateContent from '../component/Teacher/CreateContent';
+import CreateAtivity from '../component/Teacher/CreateAtivity';
+import Youtube from '../component/Teacher/youtube';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,7 +27,6 @@ export default function Teacher() {
             )
         }}>
             <Drawer.Screen name="Perfil" component={Profile} />
-            <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Disciplinas" component={Generic} />
             <Drawer.Screen name="Minhas turmas" component={Myclasses} />
             <Drawer.Screen name="Minhas Séries/Cursos" component={Mycourses} />
@@ -33,7 +34,8 @@ export default function Teacher() {
             <Drawer.Screen name="Autenticados" component={AuthenticatedCourses} />
             <Drawer.Screen name="Localização" component={CreateLocation} />
             <Drawer.Screen name="Conteudos" component={CreateContent} />
-            <Drawer.Screen name="Atividades" component={Generic} />
+            <Drawer.Screen name="Atividades" component={CreateAtivity} />
+            <Drawer.Screen name="Youtube" component={Youtube} />
         </Drawer.Navigator>
     );
 }

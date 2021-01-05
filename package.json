@@ -21,18 +21,20 @@
     "axios": "^0.21.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-crypto": "^2.2.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-maps": "0.27.1",
+    "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.12.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.10.0",
+    "react-native-youtube-iframe": "^1.4.0",
     "react-navigation": "^4.4.3",
-    "request": "^2.88.2",
     "url": "^0.11.0",
     "xmlhttprequest": "^1.8.0"
   },
@@ -44,7 +46,8 @@
     "eslint": "^7.11.0",
     "jest": "^26.5.3",
     "metro-react-native-babel-preset": "^0.63.0",
-    "react-test-renderer": "16.13.1"
+    "react-test-renderer": "16.13.1",
+    "rn-nodeify": "github:tradle/rn-nodeify"
   },
   "jest": {
     "preset": "react-native"

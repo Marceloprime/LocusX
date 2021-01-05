@@ -23,7 +23,7 @@ export default function Atividades(){
     const search = async() =>{
         let request = new XMLHttpRequest();
     
-        request.open('GET', 'http://class-path-location.herokuapp.com/location/');
+        request.open('GET', 'http://class-path-location.herokuapp.com/locations/');
         
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('Authorization', 'Token '+ data.token);
@@ -35,13 +35,13 @@ export default function Atividades(){
             console.log('Status:', this.status);
             console.log('Headers:', this.getAllResponseHeaders());
             console.log('Status:', this.responseText);
-            /*let body = await JSON.parse(this.responseText,(key, value) =>{
+            let body = await JSON.parse(this.responseText,(key, value) =>{
               console.log('key: ' + key)
               console.log(value)
               console.log('///////////////////')
               return value
             });
-            useList(body)*/
+            useList(body)
           }
         };
         
@@ -51,14 +51,14 @@ export default function Atividades(){
     const SalveLocation = async () =>{
         let request = new XMLHttpRequest();
      
-        request.open('POST', 'http://class-path-location.herokuapp.com/location/',true);
+        request.open('POST', 'http://class-path-location.herokuapp.com/locations/');
         request.setRequestHeader('Content-Type', 'application/json');
         request.setRequestHeader('Authorization', 'Token '+ data.token);
         request.onreadystatechange = async function () {
           if (this.readyState === 4) {
             console.log('Status:', this.status);
-            console.log('Headers:', this.getAllResponseHeaders());
-            console.log('Body:' + this.responseText); 
+            console.log('Headers:', JSON.stringify(this.getAllResponseHeaders()));
+            console.log('Response:', body);
           }
         };
         let body = {
@@ -91,7 +91,7 @@ export default function Atividades(){
                             <Text>Lon:{cood.longitude}</Text>
                             <TextInput style={{borderRadius: 4,borderColor:'#000000'}} placeholder="Nome da Localização" value={name} onChangeText={(text)=>{useName(text)}} />
                             <Button title="Salvar" onPress={SalveLocation}></Button>
-                            <Text>{list}</Text>
+                            <Text>{JSON.stringify(list)}</Text>
                             <Button title="Listar" onPress={search}></Button>
                         </View>
                     </View>
