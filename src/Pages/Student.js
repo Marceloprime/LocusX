@@ -18,15 +18,10 @@ import {data} from '../routes';
 import { Card, Icon } from 'react-native-elements'
 import Generic from '../component/generic';
 import Profile from '../component/Student/Profile';
-
+import Atividades from '../component/Student/atividades';
 
 const Drawer = createDrawerNavigator();
 
-//sub components
-/**
-      <Drawer.Screen name="Dados de um Curso" component={Generic} /> 
-      <Drawer.Screen name="Dados de uma Disciplina" component={Generic} />
- */
 
 export default function Student() {    
     const { signOut } = React.useContext(AuthContext);
@@ -40,7 +35,7 @@ export default function Student() {
             )
         }}>
             <Drawer.Screen name="Perfil" component={Profile} />
-            <Drawer.Screen name="Minhas atividades" component={Generic} />
+            <Drawer.Screen name="Minhas atividades" component={Atividades} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
             <Drawer.Screen name="Minhas Disciplinas" component={Generic} />
         </Drawer.Navigator>

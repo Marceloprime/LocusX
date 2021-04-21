@@ -5,55 +5,54 @@ import {
     Text,
     View,
     Dimensions,
-    TouchableHighlightComponent
+    Image
 } from 'react-native';
-import {data} from '../../routes';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native';
 const { width, height } = Dimensions.get("window");
 
+import Head2 from '../generalUse/header_level_2'
 
-export default function Profile(){
+export default function Profile(props){
+    const [data,SetData] = React.useState({
+        "username":"Bem Vindo",
+        "email":"email",
+        "is_student":"False",
+        "is_teacher":"False",
+        "is_institution_adm":"False"
+    }) 
+
+    async function  update(){
+        try{
+            const store = await AsyncStorage.getItem('@data');
+            SetData(await JSON.parse(store))
+        }
+        catch(e){
+            console.error(e)
+        }
+    }
+
+    React.useEffect(()=>{update()},[])
+
     return(
         <ScrollView style={stylePerfil.main}>
             <View style={stylePerfil.head}>
-                <Text style={stylePerfil.TextAdm}>Administrado</Text>
-            </View>
-            <View style={stylePerfil.container}>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Nº de inscrição:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.registration_number}</Text>
+                <Text style={stylePerfil.TextAdm}>Administrado(a)</Text>
+                <View style={stylePerfil.IconHead} >
+                <TouchableOpacity onPress={()=>props.navigation.openDrawer()}>
+                    <Icon size={32} name='menu' color='#ffffff'/>
+                </TouchableOpacity>
                 </View>
+            </View>
+            <Image style={stylePerfil.image} source={require('../../assets/How-to-Study-featured-image.jpg')}/>
+            <Head2 name={data.username} />
+            <View style={stylePerfil.container}>
 
                 <View style={stylePerfil.DefaultViewText}>
                     <Text style={stylePerfil.DefaultText}>Email:</Text>
                     <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
                 </View>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Cidade:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.addresses[0].city} - {data.addresses[0].state}</Text>
-                </View>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Rua:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.addresses[0].street}, Nº{data.addresses[0].number}</Text>
-                </View>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>CEP:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.addresses[0].postal_code}</Text>
-                </View>
-            
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Ponto de Referência:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.addresses[0].neighborhood}</Text>
-                </View>
-                
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Ultima modificação:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.addresses[0].modified_at}</Text>
-                </View>
-
             </View>
         </ScrollView>
      )
@@ -69,20 +68,24 @@ export default function Profile(){
     },
     head:{
         display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#46DBD2',
         width: width,
         height: 40,
         display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     TextAdm:{
+        paddingLeft: 5,
+        paddingTop: 9,
         fontSize: 17,
         fontWeight: 'bold'
     },
     IconHead:{
-        paddingRight: width/5
+        display: 'flex',
+        paddingTop: 3,
+        alignItems: 'flex-end',
+        marginLeft: 10
     },
     DefaultViewText:{
         borderBottomColor: "blue",
@@ -95,6 +98,10 @@ export default function Profile(){
     DefaultText2:{
         marginTop: 4,
         fontSize: 17
+    },
+    image:{
+        height: 130,
+        width: width
     }
 });
 

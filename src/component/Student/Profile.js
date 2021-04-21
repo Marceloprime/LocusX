@@ -1,70 +1,60 @@
 import * as React from 'react';
 import { 
-    FlatList,
-    Image,
-    ImageBackground,
-    Linking,
-    Platform,
     ScrollView,
     StyleSheet,
     Text,
     View,
-    Button,
-    Dimensions
+    Dimensions,
+    Image
 } from 'react-native';
-import {data} from '../../routes';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native';
 const { width, height } = Dimensions.get("window");
-import Icon from 'react-native-vector-icons/Entypo';
 
+import Head2 from '../generalUse/header_level_2'
 
-export default function Profile(){
-    const [info,useInfo] = React.useState()
+export default function Profile(props){
+    const [data,SetData] = React.useState({
+        "username":"Bem Vindo",
+        "email":"email",
+        "is_student":"False",
+        "is_teacher":"False",
+        "is_institution_adm":"False"
+    }) 
 
-    const ProfileStudent = async () => {
-        let request = new XMLHttpRequest();
-    
-        request.open('GET', 'http://class-path-auth.herokuapp.com/my-class/');
-        
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.setRequestHeader('Authorization', 'Token '+ data.token);
-    
-    
-        request.onreadystatechange = async function () {
-          if (this.readyState === 4) {
-            console.log('/////////////////////////////////////////////');
-            console.log('Status:', this.status);
-            console.log('Headers:', this.getAllResponseHeaders());
-            let body = await JSON.parse(this.responseText,(key, value) =>{
-              console.log('key: ' + key)
-              console.log(value)
-              console.log('///////////////////')
-              return value
-            });
-            useInfo(body)
-          }
+    async function  update(){
+        try{
+            const store = await AsyncStorage.getItem('@data');
+            SetData(await JSON.parse(store))
         }
-        request.send();
+        catch(e){
+            console.error(e)
+        }
     }
+
+    React.useEffect(()=>{update()},[])
+
     return(
-        <View style={stylePerfil.main}>
+        <ScrollView style={stylePerfil.main}>
             <View style={stylePerfil.head}>
                 <Text style={stylePerfil.TextAdm}>Estudante</Text>
-                <Icon style={stylePerfil.IconHead} name="user" size={20} color="white" />
+                <View style={stylePerfil.IconHead} >
+                <TouchableOpacity onPress={()=>props.navigation.openDrawer()}>
+                    <Icon size={32} name='menu' color='#ffffff'/>
+                </TouchableOpacity>
+                </View>
             </View>
+            <Image style={stylePerfil.image} source={require('../../assets/How-to-Study-featured-image.jpg')}/>
+            <Head2 name={data.username} />
             <View style={stylePerfil.container}>
-                <View style={stylePerfil.container2}>
-                    <Text style={stylePerfil.DefaultText}>Nº de inscrição:</Text>
+
+                <View style={stylePerfil.DefaultViewText}>
                     <Text style={stylePerfil.DefaultText}>Email:</Text>
-                    <Text style={stylePerfil.DefaultText}>ID:</Text>
-                </View>
-                <View style={stylePerfil.container3}>
-                    <Text style={stylePerfil.DefaultText2} >{data.registration_number}</Text>
                     <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
-                    
-                    <Button title='+' onPress={ProfileStudent}></Button>
                 </View>
             </View>
-        </View>
+        </ScrollView>
      )
  }
 
@@ -74,41 +64,44 @@ export default function Profile(){
         flex: 1,
     },  
     container:{
-        display: 'flex',
-        flex: 2,
-        flexDirection: 'row',
-    },
-    container2:{
-        width: (width*0.4),
-    },
-    container3:{
-        display: 'flex',
-        width:  (width*0.6),
+        display: 'flex'
     },
     head:{
         display: 'flex',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#46DBD2',
         width: width,
         height: 40,
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     TextAdm:{
-        paddingLeft: width/10,
+        paddingLeft: 5,
+        paddingTop: 9,
         fontSize: 17,
         fontWeight: 'bold'
     },
     IconHead:{
-        paddingRight: width/5
+        display: 'flex',
+        paddingTop: 3,
+        alignItems: 'flex-end',
+        marginLeft: 10
+    },
+    DefaultViewText:{
+        borderBottomColor: "blue",
+        borderBottomWidth: StyleSheet.hairlineWidth
     },
     DefaultText:{
-        fontWeight: 'bold'
+        fontSize: 15,
+        fontWeight: 'bold',
     },
     DefaultText2:{
-        textAlign: 'right'
+        marginTop: 4,
+        fontSize: 17
+    },
+    image:{
+        height: 130,
+        width: width
     }
 });
 

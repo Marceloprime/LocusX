@@ -6,8 +6,7 @@ import Student from './Pages/Student'
 import {View, Text} from 'react-native'
 
 export default function HomeScreen(props) { 
-    console.log("Home")
-    console.log(data.is_teacher)   
+    
     if(data.is_institution_adm === "True"){
         return(
             <Institution/>

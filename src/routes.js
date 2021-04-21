@@ -72,12 +72,11 @@ export default function Routes() {
       userToken = await AsyncStorage.getItem('userToken');
       username = await AsyncStorage.getItem('@username');
       password = await AsyncStorage.getItem('@password');
-      ProfileData = await AsyncStorage.getItem('@data');
-
+      data = await AsyncStorage.getItem('@data');
       console.log('Token: '+ userToken)
       console.log('username: '+ username)
       console.log('password: '+ password)
-      console.log('Data: '+ ProfileData)
+      console.log('Data: '+ data)
       axios.post('https://locusx.herokuapp.com/auth/login/',{
         "email": username,
         "password": password,
@@ -119,7 +118,6 @@ export default function Routes() {
   
 const authContext = React.useMemo(() => ({
     signIn: async (username, password) => {
-     
       axios.post('https://locusx.herokuapp.com/auth/login/',{
         "email": username,
         "password": password,
@@ -132,20 +130,20 @@ const authContext = React.useMemo(() => ({
         })
         .then(async (res) => {
           const jsonValue = JSON.stringify(res.data)
+          data = res.data
           await AsyncStorage.setItem('@data', jsonValue)
           await AsyncStorage.setItem('userToken',response.data.key);
           await AsyncStorage.setItem('@username',username);
           await AsyncStorage.setItem('@password',password);
-          data = res.data
+          await dispatch({ type: 'SIGN_IN',token: response.data.key })
         })
         .catch((error) => {
           console.error(error)
         })
-
+        
       }).catch(function (error){
         console.log(error)
       })
-      dispatch({ type: 'SIGN_IN' })
     },
     
     signOut: async () => {
@@ -231,12 +229,9 @@ function LoginScreen({navigation}) {
               }} >{eyes}</TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={ async () => {
-            await signIn(username, password)
-            //setLoading('Carregando')
-            //await console.log('Data: '+ JSON.stringify(data))
-            //navigation.navigate('Home')
-          }} ><Text style={styles.text}>Acessar</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} 
+          onPress={() => {signIn(username, password)}} >
+            <Text style={styles.text}>Acessar</Text></TouchableOpacity>
           
           <TouchableOpacity style={styles.buttonSignUp} onPress={ async () => {
             navigation.navigate('SignUP')

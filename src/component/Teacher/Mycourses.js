@@ -48,6 +48,7 @@ export default function Mycourses(props) {
           .then((res) => {
             SetCourse(res.data)
             console.log(course)
+            console.log("oi")
           })
           .catch((error) => {
             console.error(error)
