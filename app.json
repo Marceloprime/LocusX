@@ -1,0 +1,12 @@
+{
+  "name": "locusx",
+  "displayName": "LocusX",
+  "expo": {
+    "name": "locusx",
+    "slug": "locusx",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
