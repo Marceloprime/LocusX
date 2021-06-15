@@ -147,11 +147,12 @@ android {
         }
     }
     signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+        release {        
+            storeFile file('locusx.keystore')
+            storePassword 'bixo_2018'
+            keyAlias 'locusx'
+            keyPassword 'bixo_2018'
+            
         }
     }
     buildTypes {
@@ -164,6 +165,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 

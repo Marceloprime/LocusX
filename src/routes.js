@@ -16,8 +16,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Entypo';
 const axios = require('axios');
-import HomeScreen from './Home'
+import Home from './Home'
 import Generic from './component/generic'
+import DoAtividades from './component/Student/DoAtividade';
 import SignUp from './Global/signUp'
 
 
@@ -27,8 +28,6 @@ import {AuthContext} from './Global/context'
 //Variaves de dados
 let profile = null;
 export let data;
-
-
 
 export default function Routes() {
     
@@ -123,6 +122,7 @@ const authContext = React.useMemo(() => ({
         "password": password,
       }).then(function (response){
         console.log(response.data.key)
+
         axios.get('https://locusx.herokuapp.com/api/users/myprofile/', {
           headers: {
             'Authorization': `token ${response.data.key}`
@@ -131,16 +131,17 @@ const authContext = React.useMemo(() => ({
         .then(async (res) => {
           const jsonValue = JSON.stringify(res.data)
           data = res.data
+          console.log(data+"dsada")
           await AsyncStorage.setItem('@data', jsonValue)
           await AsyncStorage.setItem('userToken',response.data.key);
           await AsyncStorage.setItem('@username',username);
           await AsyncStorage.setItem('@password',password);
-          await dispatch({ type: 'SIGN_IN',token: response.data.key })
         })
         .catch((error) => {
           console.error(error)
         })
-        
+        dispatch({ type: 'SIGN_IN',token: response.data.key })
+        return true
       }).catch(function (error){
         console.log(error)
       })
@@ -169,7 +170,7 @@ const authContext = React.useMemo(() => ({
           <Stack.Navigator screenOptions={{headerShown: false}}>
             {state.isLoading ? (
               // We haven't finished checking for the token yet
-              <Stack.Screen name="Splash" component={LoginScreen} />
+              <Stack.Screen name="SignIn" component={LoginScreen} />
             ) : state.userToken == null ? (
               // No token found, user isn't signed in
               <Stack.Screen
@@ -183,9 +184,10 @@ const authContext = React.useMemo(() => ({
               />
             ) : (
               // User is signed in
-              <Stack.Screen name="Home"  component={HomeScreen} />
+              <Stack.Screen name="Home"  component={Home} />
             )}
             <Stack.Screen name="SignUP" component={SignUp}/>
+            <Stack.Screen name="Atividade" component={DoAtividades}/>
           </Stack.Navigator>
         </NavigationContainer>
       </AuthContext.Provider>
@@ -230,7 +232,16 @@ function LoginScreen({navigation}) {
           </View>
 
           <TouchableOpacity style={styles.button} 
-          onPress={() => {signIn(username, password)}} >
+          onPress={async  () => {
+            await signIn(username, password).then(
+              navigation.navigate('Home')
+            ).catch(response => {
+              console.log(response)
+            })
+            //setLoading('Carregando')
+            //await console.log('Data: '+ JSON.stringify(data))
+            
+            }} >
             <Text style={styles.text}>Acessar</Text></TouchableOpacity>
           
           <TouchableOpacity style={styles.buttonSignUp} onPress={ async () => {

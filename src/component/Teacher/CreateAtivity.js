@@ -8,41 +8,7 @@ import {data} from '../../routes';
 
 
 export default function CreateAtivity(props){
-    const myObj = {
-        "name":"John",
-        "age":30,
-        "cars": [
-          { "name":"Ford", "models":[ "Fiesta", "Focus", "Mustang" ] },
-          { "name":"BMW", "models":[ "320", "X3", "X5" ] },
-          { "name":"Fiat", "models":[ "500", "Panda" ] }
-        ]
-    }
-    function create(){
-        const request = new XMLHttpRequest();
 
-        request.open('POST', 'http://class-path-content.herokuapp.com/activities/');
-
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.setRequestHeader('Authorization',  'Token '+ data.token);
-
-        request.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            console.log('Status:', this.status);
-            console.log('Headers:', this.getAllResponseHeaders());
-            console.log('Body:', this.responseText);
-        }
-        };
-
-        var body = {
-            'title': 'Aonde fica a Torre Eiffel??',
-            'description': JSON.stringify(myObj),
-            'location': 117,
-            'course': 11,
-            'content': 98, 
-        };
-
-        request.send(JSON.stringify(body));
-    }
     return(
         <ScrollView>
             <View style={stylePerfil.head}>
@@ -52,30 +18,55 @@ export default function CreateAtivity(props){
                 </TouchableOpacity>
             </View>
             <View>
-                <Text>CreateAtivity</Text>
-                <Button title="Criar" onPress={create}></Button>
+                <Button title="Criar" onPress={()=>{}}></Button>
             </View>
         </ScrollView>
     )
 }
 
 const stylePerfil = StyleSheet.create({
+    main:{
+        flex: 1,
+    },  
+    container:{
+        display: 'flex'
+    },
     head:{
         display: 'flex',
         backgroundColor: '#46DBD2',
         width: width,
         height: 40,
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     TextAdm:{
+        paddingLeft: 5,
+        paddingTop: 9,
         fontSize: 17,
         fontWeight: 'bold'
     },
     IconHead:{
-        width: width/2,
         display: 'flex',
-        left: 70,
-        top:7,
+        paddingTop: 3,
+        alignItems: 'flex-end',
+        marginLeft: 10
+    },
+    DefaultViewText:{
+        borderBottomColor: "blue",
+        borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    DefaultText:{
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    DefaultText2:{
+        marginTop: 4,
+        fontSize: 17
+    },
+    image:{
+        height: 130,
+        width: width
     }
 });
+

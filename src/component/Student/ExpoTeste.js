@@ -6,18 +6,15 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native';
 const axios = require('axios');
 import AsyncStorage from '@react-native-community/async-storage';
+import { useEffect } from 'react';
 
 const { width, height } = Dimensions.get("window");
 
-export default function Atividades(){
+export default function DoAtividades(){
     const [longitude, useLong] = useState(0);
-    const [latitude, useLati] = useState();
+    const [latitude, useLati] = useState(0);
     const [questions,SetQuestion] = useState('');
-    const [qa, useQA] = useState(false)
-    const [qb, useQB] = useState(false)
-    const [qc, useQC] = useState(false)
-    const [qd, useQD] = useState(false)
-    const [qe, useQE] = useState(false)
+
 
     function myLocation(){
         Geolocation.getCurrentPosition(async info => {
@@ -26,7 +23,31 @@ export default function Atividades(){
         }) 
     }
 
+    function degreesToRadians(degrees) {
+        return degrees * Math.PI / 180;
+    }
+      
+    function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+        var earthRadiusKm = 6371;
+      
+        var dLat = degreesToRadians(lat2-lat1);
+        var dLon = degreesToRadians(lon2-lon1);
+      
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
+      
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        return earthRadiusKm * c;
+    }
+
+    useEffect(()=>{
+        console.log(distanceInKmBetweenEarthCoordinates(latitude,longitude,-22.00333511199598,-47.89704964955428))
+    })
+
     const getQuestion = async () =>{
+        console.log('passou')
         if(questions === ''){
             await AsyncStorage.getItem('@data')
             .then((data)=>{
@@ -35,7 +56,7 @@ export default function Atividades(){
                 .then((token)=>{
     
                 let access_token = token
-                axios.get('https://locusx.herokuapp.com/api/task/',{
+                axios.get('https://locusx.herokuapp.com/api/activityTeacher/',{
                   headers: {
                     'Authorization': `token ${access_token}`
                   }
@@ -78,42 +99,25 @@ export default function Atividades(){
                                 latitudeDelta: 0.000922,
                                 longitudeDelta: 0.000421,
                         }} ></Marker>
+
+                        <Marker key={1} coordinate={{
+                                latitude: -22.00333511199598,
+                                longitude: -47.89704964955428,
+                                latitudeDelta: 0.000922,
+                                longitudeDelta: 0.000421,
+                        }} ></Marker>
+
+                        <Marker key={2} coordinate={{
+                                latitude: -22.00433511199598,
+                                longitude: -47.89704964955428,
+                                latitudeDelta: 0.000922,
+                                longitudeDelta: 0.000421,
+                        }} ></Marker>
                     </MapView>
                     </View>
-                    <View style={{top:height/3,height:height}}>
-                        <Text style={styles.title}>Questão 1</Text>
-                        <Text style={styles.descricao}>Equipamentos domésticos chamados de vaporizadores para
-                        roupa utilizam o vapor de água gerado por um sistema de
-                        resistências elétricas a partir de água líquida. Um equipamento
-                        com potência nominal de 1.600 W foi utilizado para passar
-                        roupas por 20 minutos, consumindo 540 mL de água. Em relação
-                        ao gasto total de energia do equipamento, o gasto de energia
-                        utilizado apenas para vaporizar a água, após ela já ter atingido a
-                        temperatura de ebulição, equivale a, aproximadamente,</Text>
-                        <View style={{height:height/2}}>
-                            <View style={styles.pergunta}>
-   
-                                <Text style={{paddingTop: 5.5}}>(A) 0,04%</Text>
-                            </View>
-                            <View style={styles.pergunta}>
-   
-                                <Text style={{paddingTop: 5.5}}>(B) 0,062%</Text>
-                            </View> 
-                            <View style={styles.pergunta}>
+                    <View style={{top:height/1.5,height:height}}>
 
-                                <Text style={{paddingTop: 5.5}}>(C) 4,6%</Text>
-                            </View> 
-                            <View style={styles.pergunta}>
-
-                                <Text style={{paddingTop: 5.5}}>(D) 40%</Text>
-                            </View>
-                            <View style={styles.pergunta}>
-
-                                <Text style={{paddingTop: 5.5}}>(E) 62%</Text>
-                            </View>
-                            <Button  title="Salvar" onPress={()=>{}}></Button>                   
-                        </View>
-                </View>
+                    </View>
             </ScrollView>
         </SafeAreaView>
     )
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         width: width,
-        height: height/3,
+        height: height/2,
       },
     title:{
         backgroundColor: '#46DBD2',

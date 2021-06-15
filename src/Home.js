@@ -5,19 +5,19 @@ import Teacher from './Pages/Teacher';
 import Student from './Pages/Student'
 import {View, Text} from 'react-native'
 
-export default function HomeScreen(props) { 
+export default function Home(props) { 
     
-    if(data.is_institution_adm === "True"){
+    if(data.is_institution_adm === true){
         return(
             <Institution/>
         )
     }
-    else if(data.is_teacher === "True"){
+    else if(data.is_teacher === true){
         return(
             <Teacher/>
         )
     }
-    else if(data.is_student === "True"){
+    else if(data.is_student === true){
         return(
             <Student/>
         )

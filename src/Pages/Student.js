@@ -19,6 +19,8 @@ import { Card, Icon } from 'react-native-elements'
 import Generic from '../component/generic';
 import Profile from '../component/Student/Profile';
 import Atividades from '../component/Student/atividades';
+import DoAtividades from '../component/Student/DoAtividade.js';
+import ExpoTeste from '../component/Student/ExpoTeste'
 
 const Drawer = createDrawerNavigator();
 
@@ -35,9 +37,10 @@ export default function Student() {
             )
         }}>
             <Drawer.Screen name="Perfil" component={Profile} />
-            <Drawer.Screen name="Minhas atividades" component={Atividades} />
+            <Drawer.Screen name="Listar Atividades" component={ExpoTeste} />
+            <Drawer.Screen name="Mapa" component={Atividades} />
             <Drawer.Screen name="Listar Cursos" component={Generic} />
-            <Drawer.Screen name="Minhas Disciplinas" component={Generic} />
+            <Drawer.Screen name="Atividades" component={DoAtividades} />
         </Drawer.Navigator>
     );
 }

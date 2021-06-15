@@ -11,29 +11,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 const { width, height } = Dimensions.get("window");
-
+import {data} from '../../routes';
 import Head2 from '../generalUse/header_level_2'
 
 export default function Profile(props){
-    const [data,SetData] = React.useState({
-        "username":"Bem Vindo",
-        "email":"email",
-        "is_student":"False",
-        "is_teacher":"False",
-        "is_institution_adm":"False"
-    }) 
 
-    async function  update(){
-        try{
-            const store = await AsyncStorage.getItem('@data');
-            SetData(await JSON.parse(store))
-        }
-        catch(e){
-            console.error(e)
-        }
-    }
-
-    React.useEffect(()=>{update()},[])
 
     return(
         <ScrollView style={stylePerfil.main}>
@@ -52,6 +34,10 @@ export default function Profile(props){
                 <View style={stylePerfil.DefaultViewText}>
                     <Text style={stylePerfil.DefaultText}>Email:</Text>
                     <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
+                </View>
+                <View style={stylePerfil.DefaultViewText}>
+                    <Text style={stylePerfil.DefaultText}>Nome:</Text>
+                    <Text style={stylePerfil.DefaultText2} >{data.first_name} {data.last_name}</Text>
                 </View>
             </View>
         </ScrollView>
