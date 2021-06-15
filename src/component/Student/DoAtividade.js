@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { StyleSheet, View, Dimensions,Text,TouchableOpacity} from 'react-native';
 import MapView , {Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -15,6 +15,12 @@ const { width, height } = Dimensions.get("window");
 export default function DoAtividades(props){
     const [longitude, useLong] = useState(0);
     const [latitude, useLati] = useState(0);
+    const [title, setTitle] = useState('Estudante');
+    console.log(props.route.params.params.name)
+
+    useEffect(() => {
+        setTitle(props.route.params.params.name)
+    })
     let list =  [                        
             <Marker key={0} coordinate={{
                 latitude: latitude,
@@ -58,7 +64,7 @@ export default function DoAtividades(props){
         <SafeAreaView>
             <ScrollView scrollEnabled={true} >
                 <View style={stylePerfil.head}>
-                    <Text style={stylePerfil.TextAdm}>Estudante</Text>
+                    <Text style={stylePerfil.TextAdm}>{title}</Text>
                     <View style={stylePerfil.IconHead} >
                     </View>
                 </View>

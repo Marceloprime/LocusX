@@ -17,10 +17,12 @@ import {AuthContext} from '../Global/context';
 import {data} from '../routes';
 import { Card, Icon } from 'react-native-elements'
 import Generic from '../component/generic';
+
+
 import Profile from '../component/Student/Profile';
-import Atividades from '../component/Student/atividades';
-import DoAtividades from '../component/Student/DoAtividade.js';
-import ExpoTeste from '../component/Student/ExpoTeste'
+import Course from '../component/Student/Course';
+import Classes from '../component/Student/Classes';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -36,11 +38,11 @@ export default function Student() {
                 </DrawerContentScrollView>
             )
         }}>
-            <Drawer.Screen name="Perfil" component={Profile} />
-            <Drawer.Screen name="Listar Atividades" component={ExpoTeste} />
-            <Drawer.Screen name="Mapa" component={Atividades} />
-            <Drawer.Screen name="Listar Cursos" component={Generic} />
-            <Drawer.Screen name="Atividades" component={DoAtividades} />
+            <Drawer.Screen name="Home" component={Profile} />
+            <Drawer.Screen name="Disciplinas / Cursos" component={Course} />
+            <Drawer.Screen name="Classes" component={Classes} />
+            <Drawer.Screen name="Tutorial" component={Profile} />
+            <Drawer.Screen name="Sobre" component={Profile} />
         </Drawer.Navigator>
     );
 }

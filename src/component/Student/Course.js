@@ -27,7 +27,7 @@ const getActivity = async () =>{
         .then((token)=>{
 
         let access_token = token
-        axios.get('https://locusx.herokuapp.com/api/activityTeacher/get_student_activity/',{
+        axios.get('https://locusx.herokuapp.com/api/courseTeacher/',{
           headers: {
             'Authorization': `token ${access_token}`
           }
@@ -51,7 +51,7 @@ const getActivity = async () =>{
 
 getActivity()
 
-export default function Profile(props){
+export default function Course(props){
     const [activities, setActivities] = React.useState(Activities)
     let list = []
 
@@ -65,7 +65,7 @@ export default function Profile(props){
                 }}><Text>Fazer</Text></TouchableOpacity>
             </View>
         ))
-        console.log(activities[count])
+        console.log(activities[count].tasks)
     }
 
     return(
@@ -78,17 +78,8 @@ export default function Profile(props){
                 </TouchableOpacity>
                 </View>
             </View>
-            <Image style={stylePerfil.image} source={require('../../assets/How-to-Study-featured-image.jpg')}/>
-            <Head2 name={data.username} />
-            <View style={stylePerfil.container}>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Email:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
-                </View>
-            </View>
-            <Head2 name='Atividades'/>
-            {list}
+            <Image style={stylePerfil.image} source={require('../../assets/course.jpeg')}/>
+            <Head2 name='Disciplinas e Cursos'/>
         </ScrollView>
      )
  }

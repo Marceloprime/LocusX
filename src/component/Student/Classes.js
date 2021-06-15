@@ -18,56 +18,51 @@ import Head2 from '../generalUse/header_level_2'
 import axios from 'axios';
 
 
-let Activities = {}
-const getActivity = async () =>{
-    await AsyncStorage.getItem('@data')
-    .then((data)=>{
-        const obj = JSON.parse(data)
-        AsyncStorage.getItem('userToken')
-        .then((token)=>{
+export default function Classes(props){
+    const [classes, setClasses] = React.useState((<View></View>))
 
-        let access_token = token
-        axios.get('https://locusx.herokuapp.com/api/activityTeacher/get_student_activity/',{
-          headers: {
-            'Authorization': `token ${access_token}`
-          }
-        }).then(function (response){
-            let test = response.data.data
-            test = JSON.stringify(test)
-            test = JSON.parse(test)
-            Activities = test
-            console.log(Activities)
+    const getClass = async () =>{
+        await AsyncStorage.getItem('@data')
+        .then((data)=>{
+            const obj = JSON.parse(data)
+            AsyncStorage.getItem('userToken')
+            .then((token)=>{
+    
+            let access_token = token
+            axios.get('https://locusx.herokuapp.com/api/classTeacher/get_student_class/',{
+              headers: {
+                'Authorization': `token ${access_token}`
+              }
+            }).then(function (response){
+                let list = []
+                const responseData = response.data
+                for(const count in responseData){
+                    
+                    list.push((
+                        <View style={stylePerfil.containerActivity}>
+                            <Text style={stylePerfil.titleActivity} >{responseData[count].name}</Text>
+                            <Text style={stylePerfil.textProgram} >{responseData[count].program}</Text>
+                            <Text style={stylePerfil.text} >{responseData[count].description}</Text>
+                        </View>
+                    ))
+                }
+                setClasses(list)
+            }).catch(function (error){
+              console.log(error)
+            })
         }).catch(function (error){
-          console.log(error)
+            console.log(error)
         })
-    }).catch(function (error){
-        console.log(error)
-    })
-
-    }).catch(function (error){
-        console.log(error)
-    })
-}
-
-getActivity()
-
-export default function Profile(props){
-    const [activities, setActivities] = React.useState(Activities)
-    let list = []
-
-    for(const count in activities){
-        list.push((
-            <View style={stylePerfil.containerActivity}>
-                <Text style={stylePerfil.titleActivity} >{activities[count].name}</Text>
-                <Text>{activities[count].class}</Text>
-                <TouchableOpacity style={stylePerfil.button} onPress={()=>{
-                    props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name}})
-                }}><Text>Fazer</Text></TouchableOpacity>
-            </View>
-        ))
-        console.log(activities[count])
+    
+        }).catch(function (error){
+            console.log(error)
+        })
     }
-
+    
+    React.useEffect(()=>{
+        getClass()
+    })
+  
     return(
         <ScrollView style={stylePerfil.main}>
             <View style={stylePerfil.head}>
@@ -78,17 +73,9 @@ export default function Profile(props){
                 </TouchableOpacity>
                 </View>
             </View>
-            <Image style={stylePerfil.image} source={require('../../assets/How-to-Study-featured-image.jpg')}/>
-            <Head2 name={data.username} />
-            <View style={stylePerfil.container}>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Email:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
-                </View>
-            </View>
-            <Head2 name='Atividades'/>
-            {list}
+            <Image style={stylePerfil.image} source={require('../../assets/classes.jpeg')}/>
+            <Head2 name='Classes'/>
+            {classes}
         </ScrollView>
      )
  }
@@ -161,7 +148,7 @@ export default function Profile(props){
         height: 30
     },
     containerActivity:{
-        borderColor: "#FDAF2D",
+        borderColor: "#137333",
         borderWidth: 2,
         padding: 24,
         marginVertical: 8,
@@ -170,6 +157,15 @@ export default function Profile(props){
     titleActivity:{
         color: "#0f6fc5",
         fontSize: 20,
+        fontWeight: 'bold'
+    },
+    text:{
+        color: "#0f6fc5",
+        fontSize: 14,
+    },
+    textProgram:{
+        color: "#0f6fc5",
+        fontSize: 16,
         fontWeight: 'bold'
     }
 });
