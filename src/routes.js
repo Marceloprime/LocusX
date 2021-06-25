@@ -114,7 +114,6 @@ export default function Routes() {
 
   
 
-  
 const authContext = React.useMemo(() => ({
     signIn: async (username, password) => {
       axios.post('https://locusx.herokuapp.com/auth/login/',{
@@ -198,7 +197,8 @@ const authContext = React.useMemo(() => ({
 function LoginScreen({navigation}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [showPas, setShow] = React.useState(true)
+  const [showPas, setShow] = React.useState(true);
+  const [loading, setLoading] = React.useState('Acessar');
 
   const eye = <Icon name="eye" size={20} color="grey" />;
   const eyeWithLine = <Icon name="eye-with-line" size={20} color="grey" />;
@@ -234,15 +234,14 @@ function LoginScreen({navigation}) {
           <TouchableOpacity style={styles.button} 
           onPress={async  () => {
             await signIn(username, password).then(
-              navigation.navigate('Home')
+              setLoading('Carregando') && navigation.navigate('Home'),
+              React.useEffect(() => {loading}, [])
             ).catch(response => {
               console.log(response)
             })
-            //setLoading('Carregando')
-            //await console.log('Data: '+ JSON.stringify(data))
-            
+        
             }} >
-            <Text style={styles.text}>Acessar</Text></TouchableOpacity>
+            <Text style={styles.text}>{loading}</Text></TouchableOpacity>
           
           <TouchableOpacity style={styles.buttonSignUp} onPress={ async () => {
             navigation.navigate('SignUP')

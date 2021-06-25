@@ -56,7 +56,7 @@ export default function Course(props){
     let list = []
 
     for(const count in activities){
-        list.push((
+        list.push((                             
             <View style={stylePerfil.containerActivity}>
                 <Text style={stylePerfil.titleActivity} >{activities[count].name}</Text>
                 <Text>{activities[count].class}</Text>

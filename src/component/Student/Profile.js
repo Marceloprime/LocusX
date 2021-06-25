@@ -61,7 +61,7 @@ export default function Profile(props){
                 <Text style={stylePerfil.titleActivity} >{activities[count].name}</Text>
                 <Text>{activities[count].class}</Text>
                 <TouchableOpacity style={stylePerfil.button} onPress={()=>{
-                    props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name}})
+                    props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name, id:activities[count].id}})
                 }}><Text>Fazer</Text></TouchableOpacity>
             </View>
         ))

@@ -37,14 +37,26 @@ export default function Classes(props){
                 let list = []
                 const responseData = response.data
                 for(const count in responseData){
-                    
+                    let aux = []
+                    for(const course in responseData[count].courses){
+                        aux.push((
+                            <Text style={stylePerfil.textProgram}>{responseData[count].courses[course]}</Text>
+                        ))
+                    }
                     list.push((
                         <View style={stylePerfil.containerActivity}>
                             <Text style={stylePerfil.titleActivity} >{responseData[count].name}</Text>
-                            <Text style={stylePerfil.textProgram} >{responseData[count].program}</Text>
-                            <Text style={stylePerfil.text} >{responseData[count].description}</Text>
+          
+                            <Text style={stylePerfil.text}>Disciplinas / Cursos:</Text>
+                            {aux}
+                            <Text style={stylePerfil.text} >Docente: {responseData[count].teacher}</Text>
+                            <View style={stylePerfil.Subcontainer}>
+                                <Text  style={stylePerfil.textProgram}>Descrição</Text>
+                                <Text style={stylePerfil.text} >{responseData[count].description}</Text>
+                            </View>
                         </View>
                     ))
+                    
                 }
                 setClasses(list)
             }).catch(function (error){
@@ -74,7 +86,7 @@ export default function Classes(props){
                 </View>
             </View>
             <Image style={stylePerfil.image} source={require('../../assets/classes.jpeg')}/>
-            <Head2 name='Classes'/>
+            <Head2 name='Classes / Turmas'/>
             {classes}
         </ScrollView>
      )
@@ -152,6 +164,13 @@ export default function Classes(props){
         borderWidth: 2,
         padding: 24,
         marginVertical: 8,
+        backgroundColor: '#E0F8F7'
+    },
+    Subcontainer:{
+        borderColor: "#137333",
+        borderWidth: 2,
+        padding: 10,
+        marginVertical: 4,
         backgroundColor: '#E0F8F7'
     },
     titleActivity:{

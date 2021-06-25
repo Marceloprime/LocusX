@@ -34,12 +34,11 @@ export default function Student() {
             return(
                 <DrawerContentScrollView {...props}>
                     <DrawerItemList {...props}></DrawerItemList>
-                    <DrawerItem label='Sair'inactiveBackgroundColor='#00FFFF' onPress={signOut}></DrawerItem>
+                    <DrawerItem label='Sair' onPress={signOut}></DrawerItem>
                 </DrawerContentScrollView>
             )
         }}>
             <Drawer.Screen name="Home" component={Profile} />
-            <Drawer.Screen name="Disciplinas / Cursos" component={Course} />
             <Drawer.Screen name="Classes" component={Classes} />
             <Drawer.Screen name="Tutorial" component={Profile} />
             <Drawer.Screen name="Sobre" component={Profile} />
