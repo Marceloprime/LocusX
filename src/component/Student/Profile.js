@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
 const { width, height } = Dimensions.get("window");
 import {data} from '../../routes';
-import Head2 from '../generalUse/header_level_2'
+import Head2 from '../Global/header_level_2'
 import axios from 'axios';
 
 
@@ -56,14 +56,43 @@ export default function Profile(props){
     let list = []
 
     for(const count in activities){
+        console.log(activities)
         list.push((
-            <View style={stylePerfil.containerActivity}>
+            <TouchableOpacity style={stylePerfil.containerActivity} onPress={()=>{
+                AsyncStorage.getItem('@data')
+                .then((data)=>{
+                    const obj = JSON.parse(data)
+                    AsyncStorage.getItem('userToken')
+                    .then((token)=>{           
+                        let access_token = token
+                        axios.post('https://locusx.herokuapp.com/api/activityrealizationteacher/',{
+                            "activity": activities[count].id,
+                            "student": obj.student_id
+                        }, {
+                          headers: {
+                            'Authorization': `token ${access_token}`
+                          }
+                        }).then(function (response){
+                            props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name, id:activities[count].id}})
+                        }).catch(function (error){
+                          console.log(error)
+                        })
+                }).catch(function (error){
+                    console.log(error)
+                })
+            
+                }).catch(function (error){
+                    console.log(error)
+                })
+                console.log(activities[count])
+                    
+            }}>
                 <Text style={stylePerfil.titleActivity} >{activities[count].name}</Text>
                 <Text>{activities[count].class}</Text>
-                <TouchableOpacity style={stylePerfil.button} onPress={()=>{
-                    props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name, id:activities[count].id}})
-                }}><Text>Fazer</Text></TouchableOpacity>
-            </View>
+                <View style={stylePerfil.button}>
+                    <Text style={{color:"#fff"}}>Fazer</Text>
+                </View>
+            </TouchableOpacity>
         ))
         console.log(activities[count])
     }
@@ -71,23 +100,15 @@ export default function Profile(props){
     return(
         <ScrollView style={stylePerfil.main}>
             <View style={stylePerfil.head}>
-                <Text style={stylePerfil.TextAdm}>Estudante</Text>
+                <Text style={stylePerfil.TextAdm}>Estudante - Atividades</Text>
                 <View style={stylePerfil.IconHead} >
                 <TouchableOpacity onPress={()=>props.navigation.openDrawer()}>
-                    <Icon size={32} name='menu' color='#ffffff'/>
+                    <Icon size={32} name='menu' color='#000000'/>
                 </TouchableOpacity>
                 </View>
             </View>
             <Image style={stylePerfil.image} source={require('../../assets/How-to-Study-featured-image.jpg')}/>
             <Head2 name={data.username} />
-            <View style={stylePerfil.container}>
-
-                <View style={stylePerfil.DefaultViewText}>
-                    <Text style={stylePerfil.DefaultText}>Email:</Text>
-                    <Text style={stylePerfil.DefaultText2} >{data.email}</Text>
-                </View>
-            </View>
-            <Head2 name='Atividades'/>
             {list}
         </ScrollView>
      )
@@ -165,7 +186,9 @@ export default function Profile(props){
         borderWidth: 2,
         padding: 24,
         marginVertical: 8,
-        backgroundColor: '#E0F8F7'
+        backgroundColor: '#E0F8F7',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     titleActivity:{
         color: "#0f6fc5",

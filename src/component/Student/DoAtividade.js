@@ -15,21 +15,32 @@ export default function DoAtividades(props){
     const [longitude, useLong] = useState(0);
     const [latitude, useLati] = useState(0);
     const [title, setTitle] = useState('Estudante');
+    const [workspace, setWorkspace] = useState(
+        <View>
+            <View style={stylePerfil.containerSubLegenda}>
+                <View style={stylePerfil.cubeAzure} ></View>
+                <Text>Sua posição.</Text>
+            </View>
+            <View style={stylePerfil.containerSubLegenda}>
+                <View style={stylePerfil.cubeRed}></View>
+                <Text>Localização das tarefas a responder.</Text>
+            </View>
+            <View style={stylePerfil.containerSubLegenda}>
+                <View style={stylePerfil.cubeGreen}></View>
+                <Text>Tarefas respondidas.</Text>
+            </View>
+        </View>
+    )
 
     useEffect(() => {
         setTitle(props.route.params.params.name)
     })
     let list =  [                        
-            <Marker key={0} coordinate={{
-                latitude: latitude,
-                longitude: longitude,
-                latitudeDelta: 0.000922,
-                longitudeDelta: 0.000421,
-            }} 
-            title={'Minha posição'}    
-            pinColor={'azure'}
-            >
-            </Marker>]
+
+    ]
+    let locations = [
+
+    ]
     try{
       
         let tasks = JSON.stringify(props.route.params.params.tasks)
@@ -43,9 +54,30 @@ export default function DoAtividades(props){
                     latitude: parseFloat(location.latitude) ? parseFloat(location.latitude) : latitude,
                     longitude: parseFloat(location.longitude) ? parseFloat(location.longitude) : longitude,
 
-                }} title={tasks[count].title} ></Marker>
+                }} title={tasks[count].title} onPress={()=>{
+                    console.log(tasks[count].questions[0])
+                    setWorkspace(
+                        <View>
+                            <View>
+                                <Text>{tasks[count].title}</Text>
+                                {tasks[count].questions[0] == null ? (<View><Text></Text></View>) : (
+                                    <View>
+                                        <Text>
+                                            {tasks[count].questions[0].title}
+                                        </Text>
+                                        <Text>
+                                            {tasks[count].questions[0].description}
+                                        </Text>
+                                    </View>
+                                )}
+                                {tasks[count].questions[1] == null ? (<View><Text></Text></View>) : (<View><Text >{tasks[count].questions[1].title}</Text></View>)}
+                                {tasks[count].questions[2] == null ? (<View><Text></Text></View>) : (<View><Text >{tasks[count].questions[2].title}</Text></View>)}
+                            </View>
+                        </View>
+                    )
+                }}></Marker>
             ))
-            
+            locations.push({latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude)})
         }
     }
     catch (e){
@@ -53,10 +85,12 @@ export default function DoAtividades(props){
     }
 
     function myLocation(){
-        Geolocation.getCurrentPosition(async info => {
-            await useLati(info.coords.latitude)
-            await useLong(info.coords.longitude)
-        }) 
+        setTimeout(()=>{
+            Geolocation.getCurrentPosition(async info => {
+                await useLati(info.coords.latitude)
+                await useLong(info.coords.longitude)
+            }) 
+        },1000)      
     }
 
     myLocation()
@@ -82,29 +116,23 @@ export default function DoAtividades(props){
                             latitudeDelta: 0.015,
                             longitudeDelta: 0.0121,
                         }} 
-                        showsMyLocationButton={true}
+                        showsUserLocation={true}
+                        userLocationUpdateInterval={1000}
+                        onUserLocationChange={()=>{
+                            myLocation()
+                        }}
                     >
                     {list}
                     </MapView>
                     </View>
                     <View style={stylePerfil.containerActivity}>
-                        <TouchableOpacity style={stylePerfil.button} onPress={()=>{
-                        }}><Text style={stylePerfil.buttonText}>Iniciar Atividade</Text></TouchableOpacity>
                         <Text style={styles.title}>Legenda</Text>
-                        <View>
-                            <View style={stylePerfil.containerSubLegenda}>
-                                <View style={stylePerfil.cubeAzure}></View>
-                                <Text>Sua posição.</Text>
-                            </View>
-                            <View style={stylePerfil.containerSubLegenda}>
-                                <View style={stylePerfil.cubeRed}></View>
-                                <Text>Localização das tarefas a responder.</Text>
-                            </View>
-                            <View style={stylePerfil.containerSubLegenda}>
-                                <View style={stylePerfil.cubeGreen}></View>
-                                <Text>Tarefas respondidas.</Text>
-                            </View>
+                        <View style={stylePerfil.containerSubLegenda}>
+                            <Text>latitude: {latitude}</Text>
+                            <Text>.     .</Text>
+                            <Text>longitude: {longitude}</Text>
                         </View>
+                        {workspace}
                     </View>
             </ScrollView>
         </SafeAreaView>

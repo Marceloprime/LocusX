@@ -5,13 +5,13 @@ import {
     DrawerItem, DrawerItemList 
 } from '@react-navigation/drawer';
 
-import {AuthContext} from '../Global/context';
+import {AuthContext} from '../component/Global/context';
 
-import Generic from '../component/generic';
+import Generic from '../component/Global/generic';
 import Profile from '../component/Teacher/Profile';
 import Myclasses from '../component/Teacher/Myclasses';
 import Mycourses from '../component/Teacher/Mycourses';
-import MyInstituicao from '../component/MyInstituicao';
+import MyInstituicao from '../component/Global/MyInstituicao';
 import AuthenticatedCourses from '../component/Teacher/AuthenticatedCourses';
 import CreateContent from '../component/Teacher/CreateContent';
 import CreateAtivity from '../component/Teacher/CreateAtivity';

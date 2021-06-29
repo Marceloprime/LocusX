@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
 const { width, height } = Dimensions.get("window");
 import {data} from '../../routes';
-import Head2 from '../generalUse/header_level_2'
+import Head2 from '../Global/header_level_2'
 import axios from 'axios';
 
 

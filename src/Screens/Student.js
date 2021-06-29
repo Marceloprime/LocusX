@@ -13,10 +13,10 @@ import {
 } from 'react-native';
 import  AsyncStorage from '@react-native-community/async-storage';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import {AuthContext} from '../Global/context';
+import {AuthContext} from '../component/Global/context';
 import {data} from '../routes';
 import { Card, Icon } from 'react-native-elements'
-import Generic from '../component/generic';
+import Generic from '../component/Global/generic';
 
 
 import Profile from '../component/Student/Profile';

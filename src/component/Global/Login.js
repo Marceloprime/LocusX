@@ -17,7 +17,7 @@ import {
     GoogleSigninButton,
     statusCodes,
 } from '@react-native-google-signin/google-signin';
-
+import {auth} from  '../../routes'
 
 GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -31,7 +31,7 @@ GoogleSignin.configure({
     googleServicePlistPath: '', // [iOS] optional, if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
 });
 
-export default function Login(){
+export default function Login(props){
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [showPas, setShow] = React.useState(true);
@@ -81,7 +81,7 @@ export default function Login(){
         <KeyboardAvoidingView style = {styles.background}>
             <View style = {styles.container}>
                 <View>
-                    <Image style={styles.logo} source={require('./assets/earth.gif')}></Image>  
+                    <Image style={styles.logo} source={require('../../assets/earth.gif')}></Image>  
                     <Text style={styles.title}>Locus X</Text>  
                 </View>
                 <GoogleSigninButton
@@ -107,10 +107,17 @@ export default function Login(){
                 </View>
 
                 <TouchableOpacity style={styles.button} 
-                onPress={() => { }} >
+                onPress={() => {
+                        if(auth.signIn(username,password)){
+
+                        }
+                        else{
+                            console.log('teste')
+                        }
+                    }} >
                     <Text style={styles.text}>{loading}</Text></TouchableOpacity>
                 
-                <TouchableOpacity style={styles.buttonSignUp} onPress={() => { }} ><Text style={styles.text}>Não Tenho conta</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.buttonSignUp} onPress={()=>{props.navigation.navigate('SignUP')}} ><Text style={styles.text}>Não Tenho conta</Text></TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
     )

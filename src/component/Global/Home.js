@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {data} from './routes';
-import Institution from './Pages/Institution.js';
-import Teacher from './Pages/Teacher';
-import Student from './Pages/Student'
+import {data} from '../../routes';
+import Institution from '../../Screens/Institution.js';
+import Teacher from '../../Screens/Teacher';
+import Student from '../../Screens/Student'
 import {View, Text} from 'react-native'
 
 export default function Home(props) { 

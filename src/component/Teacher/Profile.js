@@ -12,7 +12,7 @@ import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 const { width, height } = Dimensions.get("window");
 import {data} from '../../routes';
-import Head2 from '../generalUse/header_level_2'
+import Head2 from '../Global/header_level_2'
 
 export default function Profile(props){
 
