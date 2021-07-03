@@ -53,6 +53,7 @@ getActivity()
 
 export default function Profile(props){
     const [activities, setActivities] = React.useState(Activities)
+    const [listAtivicties, Setlist] = React.useState(<View></View>)
     let list = []
 
     for(const count in activities){
