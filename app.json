@@ -5,6 +5,9 @@
     "name": "locusx",
     "slug": "locusx",
     "version": "1.0.0",
+    "splash": {
+      "image": "./src/assets/book-2.jpg"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],

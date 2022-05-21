@@ -19,17 +19,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {auth} from  '../../routes'
 
-GoogleSignin.configure({
-    scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-    webClientId: '2358117893-poiqnc4erelgpbpue6ege645ngab2m6s.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-    offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-    hostedDomain: '', // specifies a hosted domain restriction
-    loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
-    forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-    accountName: '', // [Android] specifies an account name on the device that should be used
-    iosClientId: '<FROM DEVELOPER CONSOLE>', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-    googleServicePlistPath: '', // [iOS] optional, if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
-});
+GoogleSignin.configure({"installed":{"client_id":"2358117893-m16rfvmk03nhm4oak782bct5u0nh6uvc.apps.googleusercontent.com","project_id":"locusx","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}});
 
 export default function Login(props){
     const [username, setUsername] = React.useState('');
@@ -47,16 +37,20 @@ export default function Login(props){
           await GoogleSignin.hasPlayServices();
           const userInfo = await GoogleSignin.signIn();
           setDataLogin({ userInfo });
-          console.log(dataLogin)
+          auth.signIn(userInfo.user.email,password,true)
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
+            console.log(error)
           } else if (error.code === statusCodes.IN_PROGRESS) {
             // operation (e.g. sign in) is in progress already
+            console.log(error)
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
+            console.log(error)
           } else {
             // some other error happened
+            console.log(error)
           }
         }
     }
@@ -108,7 +102,7 @@ export default function Login(props){
 
                 <TouchableOpacity style={styles.button} 
                 onPress={() => {
-                        if(auth.signIn(username,password)){
+                        if(auth.signIn(username,password,false)){
 
                         }
                         else{
@@ -173,9 +167,9 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent: "center",
         height: 48,
-        width: 180,
+        width: 220,
         backgroundColor: 'green',
-        borderRadius: 20,
+        borderRadius: 12,
     },
     buttonSignUp:{
       marginTop: 5,
@@ -184,9 +178,9 @@ const styles = StyleSheet.create({
       alignItems:"center",
       justifyContent: "center",
       height: 48,
-      width: 180,
+      width: 220,
       backgroundColor: 'blue',
-      borderRadius: 20,
+      borderRadius: 12,
   },
     text:{
         color: '#ffffff',

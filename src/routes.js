@@ -1,6 +1,10 @@
 import * as React from 'react';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-community/async-storage';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 //Navigation
 import { NavigationContainer } from '@react-navigation/native';
@@ -63,15 +67,15 @@ export default function Routes({ navigation }) {
         username = await AsyncStorage.getItem('@username');
         password = await AsyncStorage.getItem('@password');
         data = await AsyncStorage.getItem('@data');
-        console.log('Token: '+ userToken)
-        console.log('username: '+ username)
-        console.log('password: '+ password)
-        console.log('Data: '+ data)
+        //console.log('Token: '+ userToken)
+        //console.log('username: '+ username)
+        //console.log('password: '+ password)
+        //console.log('Data: '+ data)
         axios.post('https://locusx.herokuapp.com/auth/login/',{
           "email": username,
           "password": password,
         }).then(function (response){
-          console.log(response.data.key)
+          //console.log(response.data.key)
           axios.get('https://locusx.herokuapp.com/api/users/myprofile/', {
             headers: {
               'Authorization': `token ${response.data.key}`
@@ -104,37 +108,71 @@ export default function Routes({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (username, password) => {
-        console.log(username)
-        axios.post('https://locusx.herokuapp.com/auth/login/',{
-          "email": username,
-          "password": password,
-        }).then(function (response){
-          console.log(response.data.key)
-  
-          axios.get('https://locusx.herokuapp.com/api/users/myprofile/', {
-            headers: {
-              'Authorization': `token ${response.data.key}`
-            }
+      signIn: async (username, password,socialLogin) => {
+        if(socialLogin){
+          axios.post('https://locusx.herokuapp.com/api/users/socialLogin/',{
+            "email": username,
+          }).then(function (response){
+            axios.get('https://locusx.herokuapp.com/api/users/myprofile/', {
+              headers: {
+                'Authorization': `token ${response.data.token}`
+              }
+            })
+            .then(async (res) => {
+              const jsonValue = JSON.stringify(res.data)
+              data = res.data
+              //await AsyncStorage.setItem('@data', jsonValue)
+              await AsyncStorage.setItem('userToken',response.data.token);
+              await AsyncStorage.setItem('@username',username);
+              await AsyncStorage.setItem('@password',password);
+              dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+            })
+            .catch((error) => {
+              console.error(error)
+            })
+            return true
+          }).catch(function (error){
+            console.log(error)
+          })      
+        }
+        else{
+          //console.log(username)
+          axios.post('https://locusx.herokuapp.com/auth/login/',{
+            "email": username,
+            "password": password,
+          }).then(function (response){
+            //console.log(response.data.key)
+    
+            axios.get('https://locusx.herokuapp.com/api/users/myprofile/', {
+              headers: {
+                'Authorization': `token ${response.data.key}`
+              }
+            })
+            .then(async (res) => {
+              const jsonValue = JSON.stringify(res.data)
+              data = res.data
+              await AsyncStorage.setItem('@data', jsonValue)
+              await AsyncStorage.setItem('userToken',response.data.key);
+              await AsyncStorage.setItem('@username',username);
+              await AsyncStorage.setItem('@password',password);
+              dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+            })
+            .catch((error) => {
+              console.error(error)
+            })
+            return true
+          }).catch(function (error){
+            console.log(error)
           })
-          .then(async (res) => {
-            const jsonValue = JSON.stringify(res.data)
-            data = res.data
-            await AsyncStorage.setItem('@data', jsonValue)
-            await AsyncStorage.setItem('userToken',response.data.key);
-            await AsyncStorage.setItem('@username',username);
-            await AsyncStorage.setItem('@password',password);
-            dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-          })
-          .catch((error) => {
-            console.error(error)
-          })
-          return true
-        }).catch(function (error){
-          console.log(error)
-        })
-      },
+        }
+      },///////////////////////////////////
       signOut: async () => {
+        try {
+          await GoogleSignin.revokeAccess();
+          await GoogleSignin.signOut();
+        } catch (error) {
+          console.error(error);
+        }
         await AsyncStorage.clear();
         dispatch({ type: 'SIGN_OUT' })
       },

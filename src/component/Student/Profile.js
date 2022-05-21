@@ -6,9 +6,8 @@ import {
     View,
     Dimensions,
     Image,
-    FlatList,
-    SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    RefreshControl
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'react-native-elements';
@@ -18,48 +17,59 @@ import Head2 from '../Global/header_level_2'
 import axios from 'axios';
 
 
-let Activities = {}
-const getActivity = async () =>{
-    await AsyncStorage.getItem('@data')
-    .then((data)=>{
-        const obj = JSON.parse(data)
-        AsyncStorage.getItem('userToken')
-        .then((token)=>{
-
-        let access_token = token
-        axios.get('https://locusx.herokuapp.com/api/activityTeacher/get_student_activity/',{
-          headers: {
-            'Authorization': `token ${access_token}`
-          }
-        }).then(function (response){
-            let test = response.data.data
-            test = JSON.stringify(test)
-            test = JSON.parse(test)
-            Activities = test
-            console.log(Activities)
-        }).catch(function (error){
-          console.log(error)
-        })
-    }).catch(function (error){
-        console.log(error)
-    })
-
-    }).catch(function (error){
-        console.log(error)
-    })
-}
-
-getActivity()
 
 export default function Profile(props){
-    const [activities, setActivities] = React.useState(Activities)
+    const [activities, setActivities] = React.useState()
+    const [refreshing, setRefresing] = React.useState(false)
     const [listAtivicties, Setlist] = React.useState(<View></View>)
-    let list = []
 
+    const wait = (timeout) =>{
+        return new Promise(resolve => setTimeout(resolve,timeout));
+    }
+
+    const onRefresh = React.useCallback(() => {
+        setRefresing(true)
+        wait(50000).then(()=>{
+            getActivity()
+            setRefresing(false)
+        })
+    },[])
+
+
+    let list = []
+    const getActivity = async () =>{
+        await AsyncStorage.getItem('@data')
+        .then((data)=>{
+            const obj = JSON.parse(data)
+            AsyncStorage.getItem('userToken')
+            .then((token)=>{
+    
+            let access_token = token
+            axios.get('https://locusx.herokuapp.com/api/activityTeacher/get_student_activity/',{
+              headers: {
+                'Authorization': `token ${access_token}`
+              }
+            }).then(function (response){
+                let test = response.data.data
+                test = JSON.stringify(test)
+                test = JSON.parse(test)
+                setActivities(test)
+            }).catch(function (error){
+              console.log(error)
+            })
+        }).catch(function (error){
+            console.log(error)
+        })
+    
+        }).catch(function (error){
+            console.log(error)
+        })
+    }
+    getActivity()
     for(const count in activities){
-        console.log(activities)
+        //console.log(activities)
         list.push((
-            <TouchableOpacity style={stylePerfil.containerActivity} onPress={()=>{
+            <TouchableOpacity key={count} style={stylePerfil.containerActivity} onPress={()=>{
                 AsyncStorage.getItem('@data')
                 .then((data)=>{
                     const obj = JSON.parse(data)
@@ -74,7 +84,9 @@ export default function Profile(props){
                             'Authorization': `token ${access_token}`
                           }
                         }).then(function (response){
-                            props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name, id:activities[count].id}})
+                            console.log(response.data)
+                            //console.log(activities[count].tasks)
+                            props.navigation.navigate('Atividade',{ params:{tasks: activities[count].tasks, name:activities[count].name, id:activities[count].id,id_realization:response.data.id}})
                         }).catch(function (error){
                           console.log(error)
                         })
@@ -85,7 +97,7 @@ export default function Profile(props){
                 }).catch(function (error){
                     console.log(error)
                 })
-                console.log(activities[count])
+                //console.log(activities[count])
                     
             }}>
                 <Text style={stylePerfil.titleActivity} >{activities[count].name}</Text>
@@ -95,11 +107,13 @@ export default function Profile(props){
                 </View>
             </TouchableOpacity>
         ))
-        console.log(activities[count])
+        //console.log(activities[count])
     }
 
     return(
-        <ScrollView style={stylePerfil.main}>
+        <ScrollView style={stylePerfil.main} refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
             <View style={stylePerfil.head}>
                 <Text style={stylePerfil.TextAdm}>Estudante - Atividades</Text>
                 <View style={stylePerfil.IconHead} >

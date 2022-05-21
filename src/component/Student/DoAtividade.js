@@ -1,20 +1,34 @@
 import React, { useState , useEffect} from 'react';
-import { StyleSheet, View, Dimensions,Text,TouchableOpacity, Image} from 'react-native';
+import { 
+    StyleSheet, 
+    View, 
+    Dimensions,
+    Text,
+    TouchableOpacity, 
+    Modal, 
+    Pressable,
+    TextInput
+} from 'react-native';
 import MapView , {Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import OpenQuestion from '../Global/QuestionInputText'
+//import MultipleChoiceQuestion from '../Global/MultipleChoiceQuestion';
+import MultipleChoiceQuestion from '../ContentComponents/MultipleChoiceQuestion';
+
 const JSON5 = require('json5')
-const axios = require('axios');
 
 
 const { width, height } = Dimensions.get("window");
-const imagePeople = require('../../assets/cnpq.png')
+
 export default function DoAtividades(props){
     const [longitude, useLong] = useState(0);
     const [latitude, useLati] = useState(0);
     const [title, setTitle] = useState('Estudante');
+    const [titleQuestion, setTitletitleQuestion] = useState('Legenda');
+    const [modalVisible, setModalVisible] = useState(false);
     const [workspace, setWorkspace] = useState(
         <View>
             <View style={stylePerfil.containerSubLegenda}>
@@ -31,14 +45,14 @@ export default function DoAtividades(props){
             </View>
         </View>
     )
-
+    const id_realization = props.route.params.params.id_realization
     useEffect(() => {
         setTitle(props.route.params.params.name)
     })
-    let list =  [                        
+    var list =  [                        
 
     ]
-    let locations = [
+    var locations = [
 
     ]
     try{
@@ -48,6 +62,9 @@ export default function DoAtividades(props){
         tasks = JSON5.parse(tasks)
         
         for(const count in tasks){
+            //console.log('********************\n')
+            //console.log(tasks[count])
+            //console.log('********************\n')
             let location = JSON5.parse(tasks[count].location)
             list.push((
                 <Marker key={count+1} coordinate={{
@@ -55,23 +72,54 @@ export default function DoAtividades(props){
                     longitude: parseFloat(location.longitude) ? parseFloat(location.longitude) : longitude,
 
                 }} title={tasks[count].title} onPress={()=>{
-                    console.log(tasks[count].questions[0])
+                    //console.log(tasks[count].questions[0])
+                    setTitletitleQuestion(tasks[count].title)
                     setWorkspace(
                         <View>
                             <View>
                                 <Text>{tasks[count].title}</Text>
                                 {tasks[count].questions[0] == null ? (<View><Text></Text></View>) : (
-                                    <View>
-                                        <Text>
+                                    <View style={stylePerfil.questionConatiner}>
+                                        <Text style={styles.title}>
                                             {tasks[count].questions[0].title}
                                         </Text>
-                                        <Text>
+                                        <Text style={styles.questionDescription}>
                                             {tasks[count].questions[0].description}
                                         </Text>
+                                        {tasks[count].questions[0].is_openQuestion == "True" ? (
+                                            <View>
+                                                <OpenQuestion question_id={tasks[count].questions[0].id} id_realization={id_realization}/>
+                                            </View>
+                                                
+                                            ) : (
+
+                                            <View>
+                                                <MultipleChoiceQuestion 
+                                                    id_realization={id_realization} 
+                                                    question_id={tasks[count].questions[0].id}
+                                                    a={tasks[count].questions[0].alternatives[0]} 
+                                                    b={tasks[count].questions[0].alternatives[1]} 
+                                                    c={tasks[count].questions[0].alternatives[2]} 
+                                                    d={tasks[count].questions[0].alternatives[3]}/>
+                                            </View>)}
                                     </View>
                                 )}
-                                {tasks[count].questions[1] == null ? (<View><Text></Text></View>) : (<View><Text >{tasks[count].questions[1].title}</Text></View>)}
-                                {tasks[count].questions[2] == null ? (<View><Text></Text></View>) : (<View><Text >{tasks[count].questions[2].title}</Text></View>)}
+                                    {tasks[count].questions[1] == null ? (<View>                                        
+                                        <MultipleChoiceQuestion 
+                                            id_realization={id_realization}
+                                            question_id={tasks[count].questions[1].id}
+                                            a={tasks[count].questions[1].alternatives[0]} 
+                                            b={tasks[count].questions[1].alternatives[1]} 
+                                            c={tasks[count].questions[1].alternatives[2]} 
+                                            d={tasks[count].questions[1].alternatives[3]}/></View>) : (<View></View>)}
+                                    {tasks[count].questions[2] == null ? (<View>                 
+                                        <MultipleChoiceQuestion 
+                                            id_realization={id_realization}
+                                            question_id={tasks[count].questions[2].id}
+                                            a={tasks[count].questions[2].alternatives[0]} 
+                                            b={tasks[count].questions[2].alternatives[1]} 
+                                            c={tasks[count].questions[2].alternatives[2]} 
+                                            d={tasks[count].questions[2].alternatives[3]}/></View>) : (<View></View>)}
                             </View>
                         </View>
                     )
@@ -83,7 +131,7 @@ export default function DoAtividades(props){
     catch (e){
         console.log(e)
     }
-
+ 
     function myLocation(){
         setTimeout(()=>{
             Geolocation.getCurrentPosition(async info => {
@@ -93,8 +141,11 @@ export default function DoAtividades(props){
         },1000)      
     }
 
+
     myLocation()
-    useEffect(()=> myLocation)
+    setTimeout(myLocation,5000)
+    const [listTask, setListTask] = useState(list);
+    const [answer, setAnswer] = useState('');
     return(
         <SafeAreaView>
             <ScrollView scrollEnabled={true} >
@@ -122,11 +173,11 @@ export default function DoAtividades(props){
                             myLocation()
                         }}
                     >
-                    {list}
+                    {listTask}
                     </MapView>
                     </View>
                     <View style={stylePerfil.containerActivity}>
-                        <Text style={styles.title}>Legenda</Text>
+                        <Text style={styles.title}>{titleQuestion}</Text>
                         <View style={stylePerfil.containerSubLegenda}>
                             <Text>latitude: {latitude}</Text>
                             <Text>.     .</Text>
@@ -162,16 +213,53 @@ const styles = StyleSheet.create({
     borderBottomColor: "blue",
     borderBottomWidth: StyleSheet.hairlineWidth
    },
+   questionDescription:{
+    textAlign:'center',
+    fontWeight: 'bold',
+    color: '#000'
+   },
    pergunta:{
     display: 'flex',
     flexDirection: 'row',
     borderBottomColor: "blue",
     borderBottomWidth: StyleSheet.hairlineWidth
    },
-   image:{
-       width:100,
-       height:100
-   }
+   modalView: {
+    margin: 20,
+    marginTop: 130,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 })
 
 const stylePerfil = StyleSheet.create({
@@ -229,7 +317,7 @@ const stylePerfil = StyleSheet.create({
         backgroundColor: "#fff"
     },
     title: {
-        fontSize: 24
+        fontSize: 24,
     },
     button:{
         backgroundColor: "#8DB600",
@@ -253,7 +341,13 @@ const stylePerfil = StyleSheet.create({
         padding: 24,
         marginVertical: 8,
         backgroundColor: '#E0F8F7',
-        height: height/2
+    },
+    questionConatiner:{
+        borderColor: "#FDAF2D",
+        borderWidth: 2,
+        padding: 14,
+        marginVertical: 8,
+        backgroundColor: '#E0F8F7',
     },
     containerSubLegenda:{
         display: 'flex',

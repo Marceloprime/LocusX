@@ -12,17 +12,19 @@ import {
     Button
 } from 'react-native';
 import  AsyncStorage from '@react-native-community/async-storage';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList, DrawerView } from '@react-navigation/drawer';
 import {AuthContext} from '../component/Global/context';
 import {data} from '../routes';
-import { Card, Icon } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/Entypo';
 import Generic from '../component/Global/generic';
 
 
 import Profile from '../component/Student/Profile';
-import Course from '../component/Student/Course';
+import Tutorial from '../component/Student/Tutorial';
 import Classes from '../component/Student/Classes';
-
+import Help from '../component/Student/Help';
+import Notas from '../component/Student/Notas';
+import imagebackground from '../assets/logo_ICMC.jpg'
 
 const Drawer = createDrawerNavigator();
 
@@ -30,20 +32,35 @@ const Drawer = createDrawerNavigator();
 export default function Student() {    
     const { signOut } = React.useContext(AuthContext);
     return (
-        <Drawer.Navigator initialRouteName="Atividade Atual" drawerContent = {props =>{
+        <Drawer.Navigator initialRouteName="Home" drawerContent = {props =>{
             return(
-                <DrawerContentScrollView {...props}>
-                    <DrawerItemList {...props}></DrawerItemList>
-                    <DrawerItem label='Sair' onPress={signOut}></DrawerItem>
+                <DrawerContentScrollView style={{display:'flex'}}{...props}>
+                            <DrawerItemList {...props}></DrawerItemList>
+                            <DrawerItem label='Sair' onPress={signOut}   ></DrawerItem>
+                            <Image source={imagebackground} style={{display:'flex',marginLeft: 56, marginTop:120}}/>
                 </DrawerContentScrollView>
             )
-        }}>
-            <Drawer.Screen name="Home" component={Profile} />
-            <Drawer.Screen name="Classes" component={Classes} />
-            <Drawer.Screen name="Tutorial" component={Profile} />
-            <Drawer.Screen name="Sobre" component={Profile} />
+        }} >
+            <Drawer.Screen name="Home" component={Profile} options={{
+                drawerIcon: ({focused, size}) => (<Icon name="home" size={20} color="grey" />)
+            }} />
+            <Drawer.Screen name="Classes" component={Classes} options={{
+                drawerIcon: ({focused, size}) => (<Icon name="graduation-cap" size={20} color="grey" />)
+            }}/>
+            <Drawer.Screen name="Minhas Notas" component={Notas} options={{
+                drawerIcon: ({focused, size}) => (<Icon name="graduation-cap" size={20} color="grey" />)
+            }}/>
+            <Drawer.Screen name="Tutorial" component={Tutorial} options={{
+                drawerIcon: ({focused, size}) => (<Icon name="info" size={20} color="grey" />)
+            }}/>
+            <Drawer.Screen name="Ajuda e suporte" component={Help} options={{
+                drawerIcon: ({focused, size}) => (<Icon name="help" size={20} color="grey" />)
+            }} />
         </Drawer.Navigator>
     );
 }
   
 
+const drawerStyles = StyleSheet.create({
+    
+})
